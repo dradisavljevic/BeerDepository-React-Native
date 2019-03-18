@@ -4,6 +4,7 @@ import rootReducer from './rootReducer';
 import rootSaga from './rootSaga';
 import { StateType } from 'typesafe-actions';
 
+// @ts-ignore
 export type RootState = StateType<typeof rootReducer>;
 
 export default function configureStore(initialState = {}): Store<RootState> {

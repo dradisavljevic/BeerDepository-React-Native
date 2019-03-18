@@ -38,7 +38,7 @@ export type imageData = {
 };
 
 export type imageArray = {
-  images: imageData[];
+  data: imageData[];
 };
 
 export type CanState = {
@@ -60,7 +60,6 @@ export type Can = {
   color: string;
   album: string;
 };
-
 
 export enum GetCansActionTypes {
   GET_CANS = '@@cans/GET_CANS_REQUEST',

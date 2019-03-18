@@ -1,11 +1,12 @@
-import {createAsyncAction} from "typesafe-actions";
 import {
   GetCansRequest,
   GetCansActionTypes,
   GetSpecificCanRequest,
   GetSpecificCanActionTypes,
-  imageArray, imageData
-} from "./types";
+  imageArray,
+  imageData
+} from './types';
+import { createAsyncAction } from 'typesafe-actions';
 
 export const geAllCans = createAsyncAction(
   GetCansActionTypes.GET_CANS,

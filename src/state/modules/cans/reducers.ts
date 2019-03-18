@@ -1,7 +1,7 @@
 import { Reducer } from 'redux';
 import * as actions from './actions';
-import {ActionType, getType} from "typesafe-actions";
-import {CanState, imageData} from "./types";
+import { ActionType, getType } from 'typesafe-actions';
+import { CanState, imageData } from './types';
 
 export type CanActions = ActionType<typeof actions>;
 
@@ -21,13 +21,9 @@ const reducer: Reducer<CanState, CanActions> = (state = initialState, action): C
       const { payload } = action;
       return {
         ...state,
-        catalogue:
-          {
-            ...payload.images
-          },
-        can: {
-          ...payload.images[0]
-        }
+        loading: false,
+        error: '',
+        catalogue: payload.data
       };
     }
     case getType(actions.geAllCans.failure): {

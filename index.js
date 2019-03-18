@@ -4,11 +4,23 @@
  */
 
 import { Navigation } from 'react-native-navigation';
-import App from './src/App.tsx';
+import configureStore from "./src/state/store";
+import registerScreens from "./src/navigation/screenRegistry";
 
-Navigation.registerComponent('navigation.playground.WelcomeScreen', () => App);
+const store = configureStore({});
+registerScreens(store);
 
 Navigation.events().registerAppLaunchedListener(() => {
+  Navigation.setDefaultOptions({
+    topBar: {
+      visible: true,
+      animate: false,
+    },
+    layout: {
+      backgroundColor: '#FFFFFF',
+      orientation: ['portrait'],
+    },
+  });
   Navigation.setRoot({
     root: {
       component: {
