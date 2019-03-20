@@ -59,6 +59,7 @@ export type Can = {
   bought: string;
   color: string;
   album: string;
+  link: string;
 };
 
 export enum GetCansActionTypes {

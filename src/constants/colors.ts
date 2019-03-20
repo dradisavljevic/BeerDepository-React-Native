@@ -21,6 +21,7 @@ const colors: ColorPalette = {
   midnightBlue: '#191970',
   dodgerBlue: '#1E90FF',
   lightSeaGreen: '#3CB371',
+  gray20: '#333333',
   turquoise: '#40E0D0',
   royalBlue: '#4169E1',
   steelBlue: '#4682B4',

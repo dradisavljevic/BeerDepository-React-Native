@@ -6,17 +6,17 @@ import colors from '../constants/colors';
 type Props = {
   onPress: () => void;
   children: string;
+  disabled: boolean;
 };
 
-const NavigationButton: FC<Props> = ({ onPress, children }) => (
-  <Container onPress={() => onPress()}>
+const NavigationButton: FC<Props> = ({ onPress, children, disabled }) => (
+  <Container onPress={() => onPress()} disabled={disabled}>
     <ButtonText>{children.toUpperCase()}</ButtonText>
   </Container>
 );
 
 const Container = styled.TouchableOpacity`
-  padding-top: 10;
-  padding-bottom: 10;
+  padding-vertical: 10;
   text-align: center;
   background-color: ${colors.gainsboro};
   width: 40%;
@@ -25,10 +25,10 @@ const Container = styled.TouchableOpacity`
   shadow-color: ${colors.black};
   shadow-offset: {width: 0, height: 2};
   shadow-opacity: 0.8;
-  shadow-radius: 2;
   elevation: 1;
   margin-bottom: 10;
   margin-horizontal: 10;
+  opacity: ${(props: { disabled: boolean }) => (props.disabled ? 0.3 : 1)};
 `;
 
 const ButtonText = styled.Text`

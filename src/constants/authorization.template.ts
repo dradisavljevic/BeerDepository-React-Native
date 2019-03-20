@@ -1,0 +1,3 @@
+export const CLIENT_ID = 'YOUR-API-CLIENT-ID';
+
+export const ALBUM_ID = 'IMGUR-ALBUM-HASH-WHERE-CANS-ARE-STORED';

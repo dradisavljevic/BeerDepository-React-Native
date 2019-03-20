@@ -1,6 +1,6 @@
-import {ApiResponse} from 'apisauce';
-import {imageArray} from '../state/modules/cans/types';
-import {network} from './network';
+import { ApiResponse } from 'apisauce';
+import { imageArray } from '../state/modules/cans/types';
+import { network } from './network';
 
 export interface BeerCanApi {
   getAll: (albumId: number) => Promise<ApiResponse<imageArray>>;

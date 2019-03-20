@@ -63,3 +63,6 @@ buck-out/
 #
 .jest/
 coverage/
+
+# Secrets
+src/constants/authorization.ts

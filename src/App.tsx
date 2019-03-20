@@ -18,6 +18,12 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { CanState } from './state/modules/cans/types';
 import NavigationButton from './components/NavigationButton';
 import t from './i18n/i18n';
+// @ts-ignore
+import styled from 'styled-components';
+import colors from './constants/colors';
+import { ALBUM_ID, CLIENT_ID } from './constants/authorization';
+import Catalogue from './views/Catalogue';
+import SplashScreen from './views/SplashScreen';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -34,25 +40,18 @@ type Props = PropsFromDispatch & PropsFromState;
 class App extends Component<Props> {
   componentDidMount() {
     const request = {
-      clientID: 'SHHH',
-      albumID: 'SHH'
+      clientID: CLIENT_ID,
+      albumID: ALBUM_ID
     };
     this.props.getAllCans(request);
   }
   render() {
-    const { catalogue } = this.props;
+    let { catalogue } = this.props;
+    catalogue = catalogue.sort(function(a, b) {
+      return a.title > b.title ? 1 : -1;
+    });
     console.log(catalogue);
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.tsx</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
-        <View style={styles.bottomView}>
-          <NavigationButton onPress={() => {}}>{t.PREV_BUTTON.toUpperCase()}</NavigationButton>
-          <NavigationButton onPress={() => {}}>{t.NEXT_BUTTON.toUpperCase()}</NavigationButton>
-        </View>
-      </View>
-    );
+    return <Catalogue data={catalogue} />;
   }
 }
 
@@ -72,18 +71,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#333333',
     marginBottom: 5
-  },
-  bottomView: {
-    width: '100%',
-    height: 90,
-    backgroundColor: '#FFFFFF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    bottom: 0,
-    flexDirection: 'row'
   }
 });
+
+const ButtonFooter = styled.View`
+  width: 100%;
+  height: 90;
+  background-color: ${colors.white};
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 0;
+  flex-direction: row;
+`;
 
 const mapStateToProps = (state: RootState) => getCanState(state);
 

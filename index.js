@@ -6,6 +6,7 @@
 import { Navigation } from 'react-native-navigation';
 import configureStore from "./src/state/store";
 import registerScreens from "./src/navigation/screenRegistry";
+import {toCatalogue} from "./src/navigation/navigations";
 
 const store = configureStore({});
 registerScreens(store);
@@ -21,11 +22,5 @@ Navigation.events().registerAppLaunchedListener(() => {
       orientation: ['portrait'],
     },
   });
-  Navigation.setRoot({
-    root: {
-      component: {
-        name: 'navigation.playground.WelcomeScreen',
-      },
-    },
-  });
+  toCatalogue();
 });

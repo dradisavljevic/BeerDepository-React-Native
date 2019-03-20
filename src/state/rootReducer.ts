@@ -1,6 +1,6 @@
 import { Reducer, combineReducers } from 'redux';
-import {RootState} from './store';
-import {CanActions} from "./modules/cans/reducers";
+import { RootState } from './store';
+import { CanActions } from './modules/cans/reducers';
 import { can } from './index';
 
 const reducers = combineReducers({ can });

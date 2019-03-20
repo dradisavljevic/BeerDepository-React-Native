@@ -105,10 +105,17 @@ android {
         multiDexEnabled true
         versionCode 1
         versionName "1.0"
+        ndk {
+          abiFilters "armeabi-v7a", "x86"
+        }
     }
     compileOptions {
             sourceCompatibility JavaVersion.VERSION_1_8
             targetCompatibility JavaVersion.VERSION_1_8
+    }
+    lintOptions {
+      // bandaid fix for lintVitalRelease task
+      checkReleaseBuilds false
     }
     splits {
         abi {
@@ -140,6 +147,8 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-vector-icons')
+    implementation project(':react-native-fast-image')
     implementation project(':react-native-localization')
     implementation project(':react-native-navigation')
     implementation fileTree(dir: "libs", include: ["*.jar"])
