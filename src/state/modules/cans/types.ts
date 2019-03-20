@@ -46,6 +46,7 @@ export type CanState = {
   loading: boolean;
   catalogue: imageData[];
   error: string;
+  data: imageData[];
 };
 
 export type Can = {
@@ -73,3 +74,7 @@ export enum GetSpecificCanActionTypes {
   GET_SPECIFIC_CAN_SUCCESS = '@@cans/GET_SPECIFIC_CAN_SUCCESS',
   GET_SPECIFIC_CAN_FAILURE = '@@cans/GET_SPECIFIC_CAN_FAILURE'
 }
+
+export const SearchCansActionType: string = '@@cans/SEARCH_CANS';
+
+export const RemoveSearchCansActionType: string = '@@cans/REMOVE_SEARCH_CANS';

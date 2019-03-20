@@ -4,9 +4,11 @@ import {
   GetSpecificCanRequest,
   GetSpecificCanActionTypes,
   imageArray,
-  imageData
+  imageData,
+  SearchCansActionType,
+  RemoveSearchCansActionType
 } from './types';
-import { createAsyncAction } from 'typesafe-actions';
+import { createAction, createAsyncAction } from 'typesafe-actions';
 
 export const geAllCans = createAsyncAction(
   GetCansActionTypes.GET_CANS,
@@ -19,3 +21,11 @@ export const getSpecificCan = createAsyncAction(
   GetSpecificCanActionTypes.GET_SPECIFIC_CAN_SUCCESS,
   GetSpecificCanActionTypes.GET_SPECIFIC_CAN_FAILURE
 )<GetSpecificCanRequest, imageData, string>();
+
+export const searchCans = createAction(SearchCansActionType, resolve => {
+  return (filter: string) => resolve(filter);
+});
+
+export const removeSearchCans = createAction(RemoveSearchCansActionType, resolve => {
+  return () => resolve();
+});

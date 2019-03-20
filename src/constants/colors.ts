@@ -46,6 +46,7 @@ const colors: ColorPalette = {
   purple: '#800080',
   olive: '#808000',
   gray: '#808080',
+  baliHai: '#86939E',
   skyBlue: '#87CEEB',
   lightSkyBlue: '#87CEFA',
   blueViolet: '#8A2BE2',

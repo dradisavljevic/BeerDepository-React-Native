@@ -18,3 +18,14 @@ export const topBarWithSearchBar = (title: string = '') => ({
   barStyle: 'black',
   visible: true
 });
+
+export const emptyTopBar = () => ({
+  background: {
+    color: colors.black
+  },
+  noBorder: true,
+  elevation: 0,
+  barStyle: 'black',
+  visible: true,
+  height: 10
+});

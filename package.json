@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@types/enzyme": "^3.9.0",
+    "@types/react-native-vector-icons": "^4.6.4",
     "apisauce": "^1.0.2",
     "axios": "^0.18.0",
     "i18next": "^15.0.5",
