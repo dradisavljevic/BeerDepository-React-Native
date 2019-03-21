@@ -1,9 +1,10 @@
 import colors from '../constants/colors';
+import { TITLE_FONT_SIZE } from '../constants/dimensions';
 
 export const topBarWithSearchBar = (title: string = '') => ({
   title: {
     text: title,
-    fontSize: 26,
+    fontSize: TITLE_FONT_SIZE,
     color: colors.white
   },
   background: {
@@ -27,5 +28,23 @@ export const emptyTopBar = () => ({
   elevation: 0,
   barStyle: 'black',
   visible: true,
-  height: 10
+  height: 5
+});
+
+export const detailsTopBar = (title: string) => ({
+  title: {
+    text: title,
+    fontSize: TITLE_FONT_SIZE,
+    color: colors.white
+  },
+  background: {
+    color: colors.black
+  },
+  noBorder: true,
+  elevation: 0,
+  barStyle: 'black',
+  visible: true,
+  backButton: {
+    color: colors.white
+  }
 });

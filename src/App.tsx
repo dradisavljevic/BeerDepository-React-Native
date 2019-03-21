@@ -28,10 +28,7 @@ class App extends Component<Props> {
 
   render() {
     let { catalogue } = this.props;
-    catalogue = catalogue.sort(function(a, b) {
-      return a.title > b.title ? 1 : -1;
-    });
-    return <Catalogue data={catalogue} />;
+    return <Catalogue displayedData={catalogue} />;
   }
 }
 

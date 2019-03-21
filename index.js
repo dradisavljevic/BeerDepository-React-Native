@@ -7,6 +7,7 @@ import { Navigation } from 'react-native-navigation';
 import configureStore from "./src/state/store";
 import registerScreens from "./src/navigation/screenRegistry";
 import {toCatalogue} from "./src/navigation/navigations";
+import colors from "./src/constants/colors";
 
 const store = configureStore({});
 registerScreens(store);
@@ -18,7 +19,7 @@ Navigation.events().registerAppLaunchedListener(() => {
       animate: false,
     },
     layout: {
-      backgroundColor: '#FFFFFF',
+      backgroundColor: colors.white,
       orientation: ['portrait'],
     },
   });

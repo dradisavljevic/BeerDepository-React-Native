@@ -23,7 +23,7 @@ const Container = styled.TouchableOpacity`
   align-items: center;
   justify-content: center;
   shadow-color: ${colors.black};
-  shadow-offset: {width: 0, height: 2};
+  shadow-offset: 0px 2px;
   shadow-opacity: 0.8;
   elevation: 1;
   margin-bottom: 10;

@@ -3,33 +3,57 @@ import { Component } from 'react';
 import React from 'react';
 // @ts-ignore
 import styled from 'styled-components';
-import { imageData } from '../state/modules/cans/types';
+import { CanState, imageData } from '../state/modules/cans/types';
 import colors from '../constants/colors';
 import t from '../i18n/i18n';
 import { CatalogueItem, NavigationButton, TopBarWithSearchBar } from '../components';
+import { toDetailsPage } from '../navigation/navigations';
+import { Navigation } from 'react-native-navigation';
+import { connect } from 'react-redux';
+import { RootState } from '../state/store';
+import { getCanState } from '../state/modules/cans/selectors';
+import { bindActionCreators, Dispatch } from 'redux';
+import * as actions from '../state/modules/cans/actions';
 
-type Props = {
-  data: imageData[];
+type OwnProps = {
+  displayedData: imageData[];
+};
+
+type PropsFromState = CanState;
+
+type PropsFromDispatch = {
+  extractCanDetails: typeof actions.extractCanDetails;
 };
 
 type State = {
   page: number;
   content: imageData[];
   pageNumber: number;
+  componentId: string;
 };
 
+type Props = OwnProps & PropsFromState & PropsFromDispatch;
 class Catalogue extends Component<Props, State> {
   state = {
     page: 0,
-    content: this.props.data,
-    pageNumber: Math.floor(this.props.data.length / 10)
+    content: this.props.displayedData,
+    pageNumber: Math.floor(this.props.displayedData.length / 10),
+    componentId: ''
   };
   private flatListRef: FlatList<imageData> | null | undefined;
 
   componentWillReceiveProps(nextProps: Readonly<Props>, nextContext: any): void {
-    if (nextProps.data != this.props.data) {
-      this.setState({ content: nextProps.data, pageNumber: Math.floor(nextProps.data.length / 10) });
+    if (nextProps.displayedData != this.props.displayedData) {
+      this.setState({ content: nextProps.displayedData, pageNumber: Math.floor(nextProps.displayedData.length / 10) });
     }
+  }
+
+  constructor(props: Props) {
+    super(props);
+
+    Navigation.events().registerComponentDidAppearListener(({ componentId }) => {
+      this.setState({ componentId: componentId });
+    });
   }
 
   render() {
@@ -43,7 +67,17 @@ class Catalogue extends Component<Props, State> {
           ref={ref => {
             this.flatListRef = ref;
           }}
-          renderItem={({ item }) => <CatalogueItem link={item.link} description={item.description} title={item.title} />}
+          renderItem={({ item }) => (
+            <CatalogueItem
+              link={item.link}
+              description={item.description}
+              title={item.title}
+              onPress={() => {
+                this.props.extractCanDetails(item);
+                toDetailsPage(this.state.componentId, item.title);
+              }}
+            />
+          )}
           keyExtractor={(item, index) => `${index}`}
         />
         <ButtonFooter>
@@ -104,4 +138,17 @@ const ButtonFooter = styled.View`
   flex-direction: row;
 `;
 
-export default Catalogue;
+const mapStateToProps = (state: RootState) => getCanState(state);
+
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators(
+    {
+      extractCanDetails: actions.extractCanDetails
+    },
+    dispatch
+  );
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Catalogue);

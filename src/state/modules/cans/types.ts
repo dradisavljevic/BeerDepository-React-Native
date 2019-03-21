@@ -42,7 +42,7 @@ export type imageArray = {
 };
 
 export type CanState = {
-  can: imageData;
+  can: Can;
   loading: boolean;
   catalogue: imageData[];
   error: string;
@@ -78,3 +78,5 @@ export enum GetSpecificCanActionTypes {
 export const SearchCansActionType: string = '@@cans/SEARCH_CANS';
 
 export const RemoveSearchCansActionType: string = '@@cans/REMOVE_SEARCH_CANS';
+
+export const ExtractCanDetailsActionType: string = '@@cans/EXTRACT_DETAILS';

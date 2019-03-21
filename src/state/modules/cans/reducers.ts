@@ -1,13 +1,13 @@
 import { Reducer } from 'redux';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
-import { CanState, imageData } from './types';
-import { filterCans } from '../../../utils/helpers';
+import { Can, CanState, imageData } from './types';
+import { clearDescription, extractDetails, filterCans } from '../../../utils/helpers';
 
 export type CanActions = ActionType<typeof actions>;
 
 const initialState: CanState = {
-  can: {} as imageData,
+  can: {} as Can,
   loading: false,
   data: [],
   catalogue: [],
@@ -28,9 +28,15 @@ const reducer: Reducer<CanState, CanActions> = (state = initialState, action): C
         loading: false,
         error: '',
         // @ts-ignore
-        catalogue: payload.data,
+        catalogue: clearDescription(
+          payload.data.sort((a: imageData, b: imageData) => {
+            return a.title > b.title ? 1 : -1;
+          })
+        ),
         // @ts-ignore
-        data: payload.data
+        data: payload.data.sort((a: imageData, b: imageData) => {
+          return a.title > b.title ? 1 : -1;
+        })
       };
     }
     case getType(actions.geAllCans.failure): {
@@ -42,13 +48,21 @@ const reducer: Reducer<CanState, CanActions> = (state = initialState, action): C
       const { payload } = action;
       return {
         ...state,
-        catalogue: filterCans(payload as string, state.data)
+        catalogue: clearDescription(filterCans(payload as string, state.data))
       };
     }
     case getType(actions.removeSearchCans): {
       return {
         ...state,
-        catalogue: state.data
+        catalogue: clearDescription(state.data)
+      };
+    }
+    case getType(actions.extractCanDetails): {
+      // @ts-ignore
+      const { payload } = action;
+      return {
+        ...state,
+        can: extractDetails(payload)
       };
     }
     default: {

@@ -8,10 +8,11 @@ type Props = {
   link: string;
   title: string;
   description: string;
+  onPress: () => void;
 };
 
-const CatalogueItem: FC<Props> = ({ link, title, description }) => (
-  <ItemWrapper>
+const CatalogueItem: FC<Props> = ({ link, title, description, onPress }) => (
+  <ItemWrapper onPress={onPress}>
     <FastImage source={{ uri: link, priority: FastImage.priority.normal }} style={{ width: 60, height: 100 }} />
     <TextWrapper>
       <Title adjustsFontSizeToFit numberOfLines={1}>
