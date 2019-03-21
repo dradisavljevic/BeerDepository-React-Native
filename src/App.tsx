@@ -4,6 +4,7 @@ import { Navigation } from 'react-native-navigation';
 import configureStore from './state/store';
 import registerScreens from './navigation/screenRegistry';
 import { setDefaultOptions, toCatalogue } from './navigation/navigations';
+import SplashScreen from 'react-native-splash-screen';
 
 const store = configureStore({});
 registerScreens(store);
@@ -14,6 +15,10 @@ export default class App extends Component<Props> {
     super(props);
 
     this.startApp();
+  }
+
+  componentDidMount() {
+    SplashScreen.hide();
   }
 
   startApp = () => {

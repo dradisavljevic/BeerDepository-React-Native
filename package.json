@@ -37,6 +37,7 @@
     "react-native-image-zoom-viewer": "^2.2.25",
     "react-native-localization": "^2.1.0",
     "react-native-navigation": "2.13.2",
+    "react-native-splash-screen": "^3.0.6",
     "react-native-swipe-gestures": "^1.0.3",
     "react-native-vector-icons": "^6.4.1",
     "react-redux": "latest",
