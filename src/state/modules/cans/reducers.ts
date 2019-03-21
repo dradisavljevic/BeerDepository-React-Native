@@ -2,7 +2,7 @@ import { Reducer } from 'redux';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 import { Can, CanState, imageData } from './types';
-import { clearDescription, extractDetails, filterCans } from '../../../utils/helpers';
+import { clearDescription, extractDetails, extractImages, filterCans } from '../../../utils/helpers';
 
 export type CanActions = ActionType<typeof actions>;
 
@@ -11,15 +11,16 @@ const initialState: CanState = {
   loading: false,
   data: [],
   catalogue: [],
-  error: ''
+  error: '',
+  albumImages: []
 };
 
 const reducer: Reducer<CanState, CanActions> = (state = initialState, action): CanState => {
   switch (action.type) {
-    case getType(actions.geAllCans.request): {
+    case getType(actions.getAllCans.request): {
       return { ...state, loading: true, error: '' };
     }
-    case getType(actions.geAllCans.success): {
+    case getType(actions.getAllCans.success): {
       // @ts-ignore
       const { payload } = action;
 
@@ -39,7 +40,7 @@ const reducer: Reducer<CanState, CanActions> = (state = initialState, action): C
         })
       };
     }
-    case getType(actions.geAllCans.failure): {
+    case getType(actions.getAllCans.failure): {
       // @ts-ignore
       return { ...state, loading: false, error: action.payload as string };
     }
@@ -64,6 +65,25 @@ const reducer: Reducer<CanState, CanActions> = (state = initialState, action): C
         ...state,
         can: extractDetails(payload)
       };
+    }
+    case getType(actions.getAlbumImages.request): {
+      return { ...state, loading: true, error: '' };
+    }
+    case getType(actions.getAlbumImages.success): {
+      // @ts-ignore
+      const { payload } = action;
+
+      return {
+        ...state,
+        loading: false,
+        error: '',
+        // @ts-ignore
+        albumImages: extractImages(payload.data)
+      };
+    }
+    case getType(actions.getAlbumImages.failure): {
+      // @ts-ignore
+      return { ...state, loading: false, error: action.payload as string };
     }
     default: {
       return state;

@@ -1,19 +1,33 @@
-import { GetCansRequest } from './types';
+import { GetCansRequest, GetImagesRequest } from './types';
 import * as actions from './actions';
 import { getType } from 'typesafe-actions';
 import { all, takeLatest, CallEffect } from 'redux-saga/effects';
-import { call, put } from 'redux-saga-test-plan/matchers';
+import { call, put, take } from 'redux-saga-test-plan/matchers';
 import { beerCanApi } from '../../../api/beerCanApi';
 import { getErrorMessage, setAccessToken } from '../../../api/network';
+import { toImagePage } from '../../../navigation/navigations';
+import { extractImages } from '../../../utils/helpers';
 
 function* geAllCans({ payload }: { payload: GetCansRequest }) {
   setAccessToken(payload.clientID);
-  const apiCall = call(beerCanApi.getAll, payload.albumID);
+  const apiCall = call(beerCanApi.getFromAlbum, payload.albumID);
   const { ok, ...response } = yield call(callApi, apiCall);
   if (ok) {
-    yield put(actions.geAllCans.success(response.data));
+    yield put(actions.getAllCans.success(response.data));
   } else {
-    yield put(actions.geAllCans.failure(getErrorMessage(response)));
+    yield put(actions.getAllCans.failure(getErrorMessage(response)));
+  }
+}
+
+function* getCansFromAlbum({ payload }: { payload: GetImagesRequest }) {
+  setAccessToken(payload.clientID);
+  const apiCall = call(beerCanApi.getFromAlbum, payload.albumID);
+  const { ok, ...response } = yield call(callApi, apiCall);
+  if (ok) {
+    yield put(actions.getAlbumImages.success(response.data));
+    toImagePage(payload.componentID, extractImages(response.data.data), payload.title);
+  } else {
+    yield put(actions.getAlbumImages.failure(getErrorMessage(response)));
   }
 }
 
@@ -28,5 +42,7 @@ export function* callApi(apiCall: CallEffect) {
 
 export default function*() {
   // @ts-ignore
-  yield all([takeLatest(getType(actions.geAllCans.request), geAllCans)]);
+  yield all([takeLatest(getType(actions.getAllCans.request), geAllCans)]);
+  // @ts-ignore
+  yield all([takeLatest(getType(actions.getAlbumImages.request), getCansFromAlbum)]);
 }

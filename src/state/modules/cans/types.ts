@@ -3,6 +3,13 @@ export type GetCansRequest = {
   albumID: string;
 };
 
+export type GetImagesRequest = {
+  clientID: string;
+  albumID: string;
+  componentID: string;
+  title: string;
+};
+
 export type GetSpecificCanRequest = {
   clientID: string;
   imageID: string;
@@ -35,6 +42,7 @@ export type imageData = {
   edited: string;
   in_gallery: boolean;
   link: string;
+  album: string;
 };
 
 export type imageArray = {
@@ -47,6 +55,7 @@ export type CanState = {
   catalogue: imageData[];
   error: string;
   data: imageData[];
+  albumImages: object[];
 };
 
 export type Can = {
@@ -67,6 +76,12 @@ export enum GetCansActionTypes {
   GET_CANS = '@@cans/GET_CANS_REQUEST',
   GET_CANS_SUCCESS = '@@cans/GET_CANS_SUCCESS',
   GET_CANS_FAILURE = '@@cans/GET_CANS_FAILURE'
+}
+
+export enum GetAlbumImagesActionTypes {
+  GET_ALBUM_IMAGES = '@@cans/GET_ALBUM_IMAGES_REQUEST',
+  GET_ALBUM_IMAGES_SUCCESS = '@@cans/GET_ALBUM_IMAGES_SUCCESS',
+  GET_ALBUM_IMAGES_FAILURE = '@@cans/GET_ALBUM_IMAGES_FAILURE'
 }
 
 export enum GetSpecificCanActionTypes {

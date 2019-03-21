@@ -10,16 +10,55 @@ import * as actions from '../state/modules/cans/actions';
 import colors from '../constants/colors';
 // @ts-ignore
 import styled from 'styled-components';
+import { Navigation } from 'react-native-navigation';
+import { toImagePage } from '../navigation/navigations';
+import { CLIENT_ID } from '../constants/authorization';
 
 type PropsFromState = CanState;
 
-type Props = PropsFromState;
+type PropsFromDispatch = {
+  getAlbumImages: typeof actions.getAlbumImages.request;
+};
+
+type Props = PropsFromState & PropsFromDispatch;
 class CanDetails extends Component<Props> {
+  state = {
+    componentId: ''
+  };
+
+  private mounted: boolean = false;
+  componentDidMount() {
+    this.mounted = true;
+    Navigation.events().registerComponentDidAppearListener(({ componentId }) => {
+      if (this.mounted) {
+        this.setState({ componentId: componentId });
+      }
+    });
+  }
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
   render() {
     const { can } = this.props;
+
     return (
       <DetailsWrapper>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            if (can.album != '') {
+              const request = {
+                clientID: CLIENT_ID,
+                albumID: can.album,
+                componentID: this.state.componentId,
+                title: can.title
+              };
+              this.props.getAlbumImages(request);
+            } else {
+              toImagePage(this.state.componentId, [{ url: can.link }], can.title);
+            }
+          }}
+        >
           <FastImage
             source={{ uri: can.link, priority: FastImage.priority.normal }}
             style={{ width: 220, height: 300, marginTop: 20 }}
@@ -96,7 +135,13 @@ const DetailsWrapper = styled.View`
 
 const mapStateToProps = (state: RootState) => getCanState(state);
 
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({}, dispatch);
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators(
+    {
+      getAlbumImages: actions.getAlbumImages.request
+    },
+    dispatch
+  );
 
 export default connect(
   mapStateToProps,

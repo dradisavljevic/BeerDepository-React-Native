@@ -1,7 +1,6 @@
 import { Navigation } from 'react-native-navigation';
 import { detailsTopBar, emptyTopBar } from './utils';
-import { CATALOGUE, DETAILS } from './screenRegistry';
-import { imageData } from '../state/modules/cans/types';
+import { CATALOGUE, DETAILS, IMAGE } from './screenRegistry';
 
 export const toCatalogue = () => {
   return Navigation.setRoot({
@@ -30,6 +29,20 @@ export const toDetailsPage = (componentId: string, title: string) =>
       name: DETAILS,
       options: {
         topBar: detailsTopBar(title)
+      }
+    }
+  });
+
+export const toImagePage = (componentId: string, albumImages: object[], title: string) =>
+  Navigation.push(componentId, {
+    // @ts-ignore
+    component: {
+      name: IMAGE,
+      options: {
+        topBar: detailsTopBar(title)
+      },
+      passProps: {
+        albumImages: albumImages
       }
     }
   });

@@ -1,5 +1,5 @@
 // packages
-import LocalizedStringsFactory, { LocalizedStrings, GlobalStrings } from 'react-native-localization';
+import LocalizedStringsFactory, { LocalizedStrings } from 'react-native-localization';
 
 // locales
 import en from './locales/en';

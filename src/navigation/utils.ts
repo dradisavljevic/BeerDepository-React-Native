@@ -45,6 +45,7 @@ export const detailsTopBar = (title: string) => ({
   barStyle: 'black',
   visible: true,
   backButton: {
-    color: colors.white
+    color: colors.white,
+    title: ''
   }
 });

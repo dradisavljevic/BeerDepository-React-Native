@@ -11,7 +11,7 @@ import Catalogue from './views/Catalogue';
 type PropsFromState = CanState;
 
 type PropsFromDispatch = {
-  getAllCans: typeof actions.geAllCans.request;
+  getAllCans: typeof actions.getAllCans.request;
 };
 
 type Props = PropsFromDispatch & PropsFromState;
@@ -37,7 +37,7 @@ const mapStateToProps = (state: RootState) => getCanState(state);
 const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(
     {
-      getAllCans: actions.geAllCans.request
+      getAllCans: actions.getAllCans.request
     },
     dispatch
   );

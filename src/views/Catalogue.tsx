@@ -41,9 +41,16 @@ class Catalogue extends Component<Props, State> {
     componentId: ''
   };
   private flatListRef: FlatList<imageData> | null | undefined;
+  private mounted: boolean = false;
+  componentDidMount() {
+    this.mounted = true;
+  }
+  componentWillUnmount() {
+    this.mounted = false;
+  }
 
   componentWillReceiveProps(nextProps: Readonly<Props>, nextContext: any): void {
-    if (nextProps.displayedData != this.props.displayedData) {
+    if (nextProps.displayedData != this.props.displayedData && this.mounted) {
       this.setState({ content: nextProps.displayedData, pageNumber: Math.floor(nextProps.displayedData.length / 10) });
     }
   }
@@ -52,7 +59,9 @@ class Catalogue extends Component<Props, State> {
     super(props);
 
     Navigation.events().registerComponentDidAppearListener(({ componentId }) => {
-      this.setState({ componentId: componentId });
+      if (this.mounted) {
+        this.setState({ componentId: componentId });
+      }
     });
   }
 
