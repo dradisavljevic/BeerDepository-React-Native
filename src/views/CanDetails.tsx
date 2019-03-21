@@ -6,6 +6,8 @@ import { bindActionCreators, Dispatch } from 'redux';
 // @ts-ignore
 import styled from 'styled-components';
 import { Navigation } from 'react-native-navigation';
+// @ts-ignore
+import GestureRecognizer from 'react-native-swipe-gestures';
 
 import { CanState } from '../state/modules/cans/types';
 import { RootState } from '../state/store';
@@ -15,11 +17,13 @@ import { toImagePage } from '../navigation/navigations';
 import { CLIENT_ID } from '../constants/authorization';
 
 import colors from '../constants/colors';
+import { detailsTopBar } from '../navigation/utils';
 
 type PropsFromState = CanState;
 
 type PropsFromDispatch = {
   getAlbumImages: typeof actions.getAlbumImages.request;
+  extractCanDetails: typeof actions.extractCanDetails;
 };
 
 type Props = PropsFromState & PropsFromDispatch;
@@ -27,6 +31,33 @@ class CanDetails extends Component<Props> {
   state = {
     componentId: ''
   };
+
+  onSwipeRight() {
+    const index = this.props.data.findIndex(x => x.id === this.props.can.id);
+    console.log(index);
+    if (index !== 0) {
+      const newCan = this.props.data[index - 1];
+      this.props.extractCanDetails(newCan);
+      Navigation.mergeOptions(this.state.componentId, {
+        // @ts-ignore
+        topBar: detailsTopBar(newCan.title)
+      });
+    }
+  }
+
+  onSwipeLeft() {
+    const index = this.props.data.findIndex(x => x.id === this.props.can.id);
+    console.log(index);
+    console.log(this.props.data.length);
+    if (index !== this.props.data.length - 1) {
+      const newCan = this.props.data[index + 1];
+      this.props.extractCanDetails(newCan);
+      Navigation.mergeOptions(this.state.componentId, {
+        // @ts-ignore
+        topBar: detailsTopBar(newCan.title)
+      });
+    }
+  }
 
   private mounted: boolean = false;
   componentDidMount() {
@@ -43,9 +74,25 @@ class CanDetails extends Component<Props> {
 
   render() {
     const { can } = this.props;
+    const swipeConfig = {
+      velocityThreshold: 0.3,
+      directionalOffsetThreshold: 80
+    };
 
     return (
-      <DetailsWrapper>
+      <GestureRecognizer
+        onSwipeLeft={() => this.onSwipeLeft()}
+        onSwipeRight={() => this.onSwipeRight()}
+        config={swipeConfig}
+        style={{
+          flex: 1,
+          backgroundColor: colors.white,
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          paddingLeft: 10,
+          paddingRight: 10
+        }}
+      >
         <TouchableOpacity
           onPress={() => {
             if (can.album != '') {
@@ -89,7 +136,7 @@ class CanDetails extends Component<Props> {
           <BoldAttributeName>Ownership: </BoldAttributeName>
           <AttributeValue>{can.ownership}</AttributeValue>
         </KeyValueTextPair>
-      </DetailsWrapper>
+      </GestureRecognizer>
     );
   }
 }
@@ -140,7 +187,8 @@ const mapStateToProps = (state: RootState) => getCanState(state);
 const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(
     {
-      getAlbumImages: actions.getAlbumImages.request
+      getAlbumImages: actions.getAlbumImages.request,
+      extractCanDetails: actions.extractCanDetails
     },
     dispatch
   );

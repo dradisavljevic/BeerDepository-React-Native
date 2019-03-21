@@ -59,6 +59,7 @@ export type CanState = {
 };
 
 export type Can = {
+  id: string;
   title: string;
   brand: string;
   quantity: string;

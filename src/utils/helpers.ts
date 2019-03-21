@@ -48,6 +48,7 @@ const extractDetails = (canData: imageData): Can => {
   can.link = canData.link;
   can.title = canData.title;
   can.album = canData.album;
+  can.id = canData.id;
   return can;
 };
 

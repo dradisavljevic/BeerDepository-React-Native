@@ -5,6 +5,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { Navigation } from 'react-native-navigation';
+// @ts-ignore
+import GestureRecognizer from 'react-native-swipe-gestures';
 
 import { CanState, imageData } from '../state/modules/cans/types';
 import { CatalogueItem, NavigationButton, TopBarWithSearchBar } from '../components';
@@ -16,6 +18,7 @@ import * as actions from '../state/modules/cans/actions';
 
 import colors from '../constants/colors';
 import t from '../i18n/i18n';
+import { detailsTopBar } from '../navigation/utils';
 
 type OwnProps = {
   displayedData: imageData[];
@@ -57,6 +60,18 @@ class Catalogue extends Component<Props, State> {
     }
   }
 
+  onSwipeRight() {
+    if (this.state.page !== 0) {
+      this.setState({ page: this.state.page - 1 });
+    }
+  }
+
+  onSwipeLeft() {
+    if (this.state.page !== this.state.pageNumber) {
+      this.setState({ page: this.state.page + 1 });
+    }
+  }
+
   constructor(props: Props) {
     super(props);
 
@@ -69,8 +84,21 @@ class Catalogue extends Component<Props, State> {
 
   render() {
     const { content, page } = this.state;
+    const swipeConfig = {
+      velocityThreshold: 0.3,
+      directionalOffsetThreshold: 80
+    };
     return (
-      <CatalogueWrapper>
+      <GestureRecognizer
+        onSwipeLeft={() => this.onSwipeLeft()}
+        onSwipeRight={() => this.onSwipeRight()}
+        config={swipeConfig}
+        style={{
+          flex: 1,
+          backgroundColor: colors.black,
+          justifyContent: 'flex-start'
+        }}
+      >
         <TopBarWithSearchBar />
         <FlatList
           data={content.slice(page * 10, page * 10 + 10)}
@@ -111,16 +139,10 @@ class Catalogue extends Component<Props, State> {
             {t.NEXT_BUTTON.toUpperCase()}
           </NavigationButton>
         </ButtonFooter>
-      </CatalogueWrapper>
+      </GestureRecognizer>
     );
   }
 }
-
-const CatalogueWrapper = styled.View`
-  flex: 1;
-  justify-content: flex-start;
-  background-color: ${colors.black};
-`;
 
 const MessageHeader = styled.Text`
   font-size: 23;
