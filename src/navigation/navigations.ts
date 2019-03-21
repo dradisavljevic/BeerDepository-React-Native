@@ -74,7 +74,8 @@ export const setDefaultOptions = () => {
         },
         setRoot: {
           enabled: 'true'
-        }
+        },
+        type: 'fade'
       };
   Navigation.setDefaultOptions({
     // @ts-ignore
