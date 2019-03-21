@@ -1,11 +1,11 @@
 import { applyMiddleware, createStore, Store } from 'redux';
 import createSagaMiddleware from 'redux-saga';
-import rootReducer from './rootReducer';
-import rootSaga from './rootSaga';
 import { StateType } from 'typesafe-actions';
 
-// @ts-ignore
-export type RootState = StateType<typeof rootReducer>;
+import rootReducer from './rootReducer';
+import rootSaga from './rootSaga';
+
+export type RootState = StateType<any>;
 
 export default function configureStore(initialState = {}): Store<RootState> {
   const sagaMiddleware = createSagaMiddleware();

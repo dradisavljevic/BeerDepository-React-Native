@@ -1,6 +1,9 @@
 import { Navigation } from 'react-native-navigation';
+
 import { detailsTopBar, emptyTopBar } from './utils';
 import { CATALOGUE, DETAILS, IMAGE } from './screenRegistry';
+import colors from '../constants/colors';
+import globals from '../constants/globals';
 
 export const toCatalogue = () => {
   return Navigation.setRoot({
@@ -46,3 +49,43 @@ export const toImagePage = (componentId: string, albumImages: object[], title: s
       }
     }
   });
+
+export const setDefaultOptions = () => {
+  const animations = globals.isIos
+    ? {}
+    : {
+        push: {
+          content: {
+            x: {
+              from: 1000,
+              to: 0,
+              duration: 300
+            }
+          }
+        },
+        pop: {
+          content: {
+            x: {
+              from: 0,
+              to: 1000,
+              duration: 300
+            }
+          }
+        },
+        setRoot: {
+          enabled: 'true'
+        }
+      };
+  Navigation.setDefaultOptions({
+    // @ts-ignore
+    animations,
+    topBar: {
+      visible: true,
+      animate: false
+    },
+    layout: {
+      backgroundColor: colors.white,
+      orientation: ['portrait']
+    }
+  });
+};

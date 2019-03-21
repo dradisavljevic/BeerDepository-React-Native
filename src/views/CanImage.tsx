@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import { IImageInfo } from 'react-native-image-zoom-viewer/built/image-viewer.type';
 
+import colors from '../constants/colors';
+
 type Props = {
   albumImages: IImageInfo[];
 };
@@ -15,7 +17,7 @@ class CanImage extends Component<Props> {
   }
   render() {
     const { albumImages } = this.props;
-    return <ImageViewer imageUrls={albumImages} />;
+    return <ImageViewer backgroundColor={colors.black} imageUrls={albumImages} />;
   }
 }
 

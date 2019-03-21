@@ -1,6 +1,7 @@
 // @ts-ignore
 import styled from 'styled-components';
 import React, { FC } from 'react';
+
 import colors from '../constants/colors';
 
 type Props = {

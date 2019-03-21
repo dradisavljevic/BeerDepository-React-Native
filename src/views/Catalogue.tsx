@@ -3,17 +3,19 @@ import { Component } from 'react';
 import React from 'react';
 // @ts-ignore
 import styled from 'styled-components';
+import { connect } from 'react-redux';
+import { Navigation } from 'react-native-navigation';
+
 import { CanState, imageData } from '../state/modules/cans/types';
-import colors from '../constants/colors';
-import t from '../i18n/i18n';
 import { CatalogueItem, NavigationButton, TopBarWithSearchBar } from '../components';
 import { toDetailsPage } from '../navigation/navigations';
-import { Navigation } from 'react-native-navigation';
-import { connect } from 'react-redux';
 import { RootState } from '../state/store';
 import { getCanState } from '../state/modules/cans/selectors';
 import { bindActionCreators, Dispatch } from 'redux';
 import * as actions from '../state/modules/cans/actions';
+
+import colors from '../constants/colors';
+import t from '../i18n/i18n';
 
 type OwnProps = {
   displayedData: imageData[];

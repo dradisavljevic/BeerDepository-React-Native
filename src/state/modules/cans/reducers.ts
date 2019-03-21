@@ -1,6 +1,7 @@
 import { Reducer } from 'redux';
-import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
+
+import * as actions from './actions';
 import { Can, CanState, imageData } from './types';
 import { clearDescription, extractDetails, extractImages, filterCans } from '../../../utils/helpers';
 

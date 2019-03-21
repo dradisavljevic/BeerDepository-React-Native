@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
 import { TouchableOpacity } from 'react-native';
-import { CanState } from '../state/modules/cans/types';
 import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
-import { RootState } from '../state/store';
-import { getCanState } from '../state/modules/cans/selectors';
 import { bindActionCreators, Dispatch } from 'redux';
-import * as actions from '../state/modules/cans/actions';
-import colors from '../constants/colors';
 // @ts-ignore
 import styled from 'styled-components';
 import { Navigation } from 'react-native-navigation';
+
+import { CanState } from '../state/modules/cans/types';
+import { RootState } from '../state/store';
+import { getCanState } from '../state/modules/cans/selectors';
+import * as actions from '../state/modules/cans/actions';
 import { toImagePage } from '../navigation/navigations';
 import { CLIENT_ID } from '../constants/authorization';
+
+import colors from '../constants/colors';
 
 type PropsFromState = CanState;
 

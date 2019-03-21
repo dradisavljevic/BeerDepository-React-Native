@@ -7,7 +7,6 @@ const reducers = combineReducers({ can });
 
 type RootAction = CanActions;
 
-// @ts-ignore
 const rootReducer: Reducer<RootState, RootAction> = (state, action) => {
   switch (action.type) {
     default: {

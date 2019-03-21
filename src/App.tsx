@@ -1,48 +1,26 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import * as actions from './state/modules/cans/actions';
-import { RootState } from './state/store';
-import { getCanState } from './state/modules/cans/selectors';
-import { bindActionCreators, Dispatch } from 'redux';
-import { CanState } from './state/modules/cans/types';
-import { ALBUM_ID, CLIENT_ID } from './constants/authorization';
-import Catalogue from './views/Catalogue';
 
-type PropsFromState = CanState;
+import { Navigation } from 'react-native-navigation';
+import configureStore from './state/store';
+import registerScreens from './navigation/screenRegistry';
+import { setDefaultOptions, toCatalogue } from './navigation/navigations';
 
-type PropsFromDispatch = {
-  getAllCans: typeof actions.getAllCans.request;
-};
+const store = configureStore({});
+registerScreens(store);
 
-type Props = PropsFromDispatch & PropsFromState;
-class App extends Component<Props> {
-  componentDidMount() {
-    const request = {
-      clientID: CLIENT_ID,
-      albumID: ALBUM_ID
-    };
-    if (this.props.data.length === 0) {
-      this.props.getAllCans(request);
-    }
+type Props = {};
+export default class App extends Component<Props> {
+  constructor(props: Props) {
+    super(props);
+
+    this.startApp();
   }
 
-  render() {
-    let { catalogue } = this.props;
-    return <Catalogue displayedData={catalogue} />;
-  }
+  startApp = () => {
+    // navigation and store config
+    Navigation.events().registerAppLaunchedListener(() => {
+      setDefaultOptions();
+      toCatalogue();
+    });
+  };
 }
-
-const mapStateToProps = (state: RootState) => getCanState(state);
-
-const mapDispatchToProps = (dispatch: Dispatch) =>
-  bindActionCreators(
-    {
-      getAllCans: actions.getAllCans.request
-    },
-    dispatch
-  );
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(App);

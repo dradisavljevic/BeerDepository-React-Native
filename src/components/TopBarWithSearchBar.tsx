@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
-import { If } from '../utils/helpers';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import colors from '../constants/colors';
 import { SearchBar } from 'react-native-elements';
+import { If } from '../utils/helpers';
+import { connect } from 'react-redux';
+import { bindActionCreators, Dispatch } from 'redux';
+import { StyleSheet } from 'react-native';
 // @ts-ignore
 import styled from 'styled-components';
-import { MATERIAL_ICON_SIZE, TITLE_FONT_SIZE } from '../constants/dimensions';
-import t from '../i18n/i18n';
-import { connect } from 'react-redux';
+
 import { RootState } from '../state/store';
 import { getCanState } from '../state/modules/cans/selectors';
-import { bindActionCreators, Dispatch } from 'redux';
 import * as actions from '../state/modules/cans/actions';
 import { CanState } from '../state/modules/cans/types';
-import { StyleSheet } from 'react-native';
+
+import { MATERIAL_ICON_SIZE, TITLE_FONT_SIZE } from '../constants/dimensions';
+import t from '../i18n/i18n';
+import colors from '../constants/colors';
 
 type PropsFromState = CanState;
 

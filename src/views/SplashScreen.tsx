@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import Beer128 from '../assets/icons/Beer128.png';
 // @ts-ignore
 import styled from 'styled-components';
+
+import Beer128 from '../assets/icons/Beer128.png';
+
 import colors from '../constants/colors';
 
 class SplashScreen extends Component {

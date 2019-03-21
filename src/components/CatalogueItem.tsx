@@ -1,8 +1,9 @@
 import React, { FC } from 'react';
 import FastImage from 'react-native-fast-image';
-import colors from '../constants/colors';
 // @ts-ignore
 import styled from 'styled-components';
+
+import colors from '../constants/colors';
 
 type Props = {
   link: string;
