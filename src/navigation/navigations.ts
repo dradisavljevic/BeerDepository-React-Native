@@ -1,7 +1,7 @@
 import { Navigation } from 'react-native-navigation';
 
 import { detailsTopBar, emptyTopBar } from './utils';
-import { CATALOGUE, DETAILS, IMAGE } from './screenRegistry';
+import { CATALOGUE, DETAILS, IMAGE, NO_CONNECTION } from './screenRegistry';
 import colors from '../constants/colors';
 import globals from '../constants/globals';
 
@@ -25,7 +25,7 @@ export const toCatalogue = () => {
   });
 };
 
-export const toDetailsPage = (componentId: string, title: string) =>
+export const toDetailsScreen = (componentId: string, title: string) =>
   Navigation.push(componentId, {
     // @ts-ignore
     component: {
@@ -36,7 +36,7 @@ export const toDetailsPage = (componentId: string, title: string) =>
     }
   });
 
-export const toImagePage = (componentId: string, albumImages: object[], title: string) =>
+export const toImageScreen = (componentId: string, albumImages: object[], title: string) =>
   Navigation.push(componentId, {
     // @ts-ignore
     component: {
@@ -49,6 +49,26 @@ export const toImagePage = (componentId: string, albumImages: object[], title: s
       }
     }
   });
+
+export const toNoConnectionScreen = () => {
+  return Navigation.setRoot({
+    root: {
+      // @ts-ignore
+      stack: {
+        children: [
+          {
+            component: {
+              name: NO_CONNECTION,
+              options: {
+                topBar: emptyTopBar()
+              }
+            }
+          }
+        ]
+      }
+    }
+  });
+};
 
 export const setDefaultOptions = () => {
   const animations = globals.isIos

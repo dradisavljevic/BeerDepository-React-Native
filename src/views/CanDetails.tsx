@@ -13,7 +13,7 @@ import { CanState } from '../state/modules/cans/types';
 import { RootState } from '../state/store';
 import { getCanState } from '../state/modules/cans/selectors';
 import * as actions from '../state/modules/cans/actions';
-import { toImagePage } from '../navigation/navigations';
+import { toImageScreen } from '../navigation/navigations';
 import { CLIENT_ID } from '../constants/authorization';
 
 import colors from '../constants/colors';
@@ -104,7 +104,7 @@ class CanDetails extends Component<Props> {
               };
               this.props.getAlbumImages(request);
             } else {
-              toImagePage(this.state.componentId, [{ url: can.link }], can.title);
+              toImageScreen(this.state.componentId, [{ url: can.link }], can.title);
             }
           }}
         >
@@ -173,13 +173,6 @@ const InfoText = styled.Text`
   font-size: 22;
   color: ${colors.gray20};
   text-align: center;
-`;
-
-const DetailsWrapper = styled.View`
-  flex: 1;
-  align-items: center;
-  justify-content: flex-start;
-  padding-horizontal: 10;
 `;
 
 const mapStateToProps = (state: RootState) => getCanState(state);

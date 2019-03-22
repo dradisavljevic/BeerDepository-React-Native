@@ -5,7 +5,7 @@ import { all, takeLatest, CallEffect } from 'redux-saga/effects';
 import { call, put, take } from 'redux-saga-test-plan/matchers';
 import { beerCanApi } from '../../../api/beerCanApi';
 import { getErrorMessage, setAccessToken } from '../../../api/network';
-import { toImagePage } from '../../../navigation/navigations';
+import { toImageScreen } from '../../../navigation/navigations';
 import { extractImages } from '../../../utils/helpers';
 
 function* geAllCans({ payload }: { payload: GetCansRequest }) {
@@ -25,7 +25,7 @@ function* getCansFromAlbum({ payload }: { payload: GetImagesRequest }) {
   const { ok, ...response } = yield call(callApi, apiCall);
   if (ok) {
     yield put(actions.getAlbumImages.success(response.data));
-    toImagePage(payload.componentID, extractImages(response.data.data), payload.title);
+    toImageScreen(payload.componentID, extractImages(response.data.data), payload.title);
   } else {
     yield put(actions.getAlbumImages.failure(getErrorMessage(response)));
   }

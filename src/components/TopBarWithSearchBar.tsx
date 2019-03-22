@@ -42,77 +42,84 @@ class TopBarWithSearchBar extends Component<Props, State> {
   render() {
     const { search, searchBar, title } = this.state;
     return (
-      <If
-        condition={!searchBar}
-        then={
-          <TitleWrapper>
-            <If
-              condition={this.state.title != t.TITLE}
-              then={
-                <Icon
-                  style={styles.clearFilterIcon}
-                  name={'clear'}
-                  size={MATERIAL_ICON_SIZE}
-                  color={colors.baliHai}
-                  onPress={() => {
-                    this.setState({ search: '', title: t.TITLE });
-                    this.props.removeSearchCans();
-                  }}
-                />
-              }
-            />
-            <Title>{title}</Title>
-            <Icon
-              style={styles.searchIcon}
-              name={'search'}
-              size={MATERIAL_ICON_SIZE}
-              color={colors.baliHai}
-              onPress={() => {
-                this.setState({ searchBar: true });
-              }}
-            />
-          </TitleWrapper>
-        }
-        else={
-          <SearchBarWrapper>
-            <SearchBar
-              placeholder={t.SEARCH_CATALOGUE}
-              onChangeText={this.updateSearch}
-              value={search}
-              autoCorrect={false}
-              autoCapitalize={'none'}
-              autoFocus={true}
-              containerStyle={styles.topBarBackground}
-              inputStyle={styles.styledInput}
-              inputContainerStyle={styles.topBarBackground}
-              leftIconContainerStyle={styles.topBarBackground}
-              rightIconContainerStyle={styles.topBarBackground}
-              searchIcon={false}
-              onFocus={() => {
-                this.setState({ search: '' });
-              }}
-              onClear={() => {
-                this.setState({ searchBar: false });
-              }}
-              onEndEditing={() => {
-                if (search.length != 0) {
-                  this.setState({ title: search });
-                  this.props.searchCans(this.state.search);
+      <TopBarWrapper>
+        <If
+          condition={!searchBar}
+          then={
+            <TitleWrapper>
+              <If
+                condition={this.state.title != t.TITLE}
+                then={
+                  <Icon
+                    style={styles.clearFilterIcon}
+                    name={'clear'}
+                    size={MATERIAL_ICON_SIZE}
+                    color={colors.baliHai}
+                    onPress={() => {
+                      this.setState({ search: '', title: t.TITLE });
+                      this.props.removeSearchCans();
+                    }}
+                  />
                 }
-                this.setState({ searchBar: false });
-              }}
-            />
-          </SearchBarWrapper>
-        }
-      />
+              />
+              <Title>{title}</Title>
+              <Icon
+                style={styles.searchIcon}
+                name={'search'}
+                size={MATERIAL_ICON_SIZE}
+                color={colors.baliHai}
+                onPress={() => {
+                  this.setState({ searchBar: true });
+                }}
+              />
+            </TitleWrapper>
+          }
+          else={
+            <SearchBarWrapper>
+              <SearchBar
+                placeholder={t.SEARCH_CATALOGUE}
+                onChangeText={this.updateSearch}
+                value={search}
+                autoCorrect={false}
+                autoCapitalize={'none'}
+                autoFocus={true}
+                containerStyle={styles.topBarBackground}
+                inputStyle={styles.styledInput}
+                inputContainerStyle={styles.topBarBackground}
+                leftIconContainerStyle={styles.topBarBackground}
+                rightIconContainerStyle={styles.topBarBackground}
+                searchIcon={false}
+                onFocus={() => {
+                  this.setState({ search: '' });
+                }}
+                onClear={() => {
+                  this.setState({ searchBar: false });
+                }}
+                onEndEditing={() => {
+                  if (search.length != 0) {
+                    this.setState({ title: search });
+                    this.props.searchCans(this.state.search);
+                  }
+                  this.setState({ searchBar: false });
+                }}
+              />
+            </SearchBarWrapper>
+          }
+        />
+      </TopBarWrapper>
     );
   }
 }
+
+const TopBarWrapper = styled.View`
+  height: 60;
+`;
 
 const TitleWrapper = styled.View`
   flex-direction: row;
   padding-vertical: 15;
   padding-horizontal: 15;
+  margin-bottom: 5;
 `;
 
 const Title = styled.Text`

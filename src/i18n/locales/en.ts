@@ -4,7 +4,9 @@ const en: LanguageStringsObject = {
   PREV_BUTTON: 'Prev',
   NEXT_BUTTON: 'Next',
   TITLE: 'Beer Depository',
-  SEARCH_CATALOGUE: 'Search beer catalogue...'
+  SEARCH_CATALOGUE: 'Search beer catalogue...',
+  NO_INTERNET_CONNECTION: 'No Internet Connection',
+  PLEASE_CONNECT: 'Please make sure you connect to the Internet and try again'
 };
 
 export default en;
