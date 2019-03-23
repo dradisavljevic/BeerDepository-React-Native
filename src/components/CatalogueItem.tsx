@@ -26,7 +26,7 @@ const CatalogueItem: FC<Props> = ({ link, title, description, onPress }) => (
 
 const Title = styled.Text`
   text-align: center;
-  color: ${colors.gray20};
+  color: ${colors.darkCharcoal};
   margin-bottom: 5;
   font-size: 23;
   font-weight: 600;

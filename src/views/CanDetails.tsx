@@ -143,13 +143,13 @@ class CanDetails extends Component<Props> {
 
 const BoldAttributeName = styled.Text`
   font-weight: bold;
-  color: ${colors.gray20};
+  color: ${colors.darkCharcoal};
   font-size: 16;
 `;
 
 const AttributeValue = styled.Text`
   font-size: 16;
-  color: ${colors.gray20};
+  color: ${colors.darkCharcoal};
 `;
 
 const Delimiter = styled.View`
@@ -165,13 +165,13 @@ const KeyValueTextPair = styled.View`
 
 const BrandText = styled.Text`
   font-size: 32;
-  color: ${colors.gray20};
+  color: ${colors.darkCharcoal};
   margin-vertical: 10;
 `;
 
 const InfoText = styled.Text`
   font-size: 22;
-  color: ${colors.gray20};
+  color: ${colors.darkCharcoal};
   text-align: center;
 `;
 
