@@ -18,6 +18,8 @@ import { CLIENT_ID } from '../constants/authorization';
 
 import colors from '../constants/colors';
 import { detailsTopBar } from '../navigation/utils';
+import { Spinner } from '../components';
+import { If } from '../utils/helpers';
 
 type PropsFromState = CanState;
 
@@ -80,63 +82,70 @@ class CanDetails extends Component<Props> {
     };
 
     return (
-      <GestureRecognizer
-        onSwipeLeft={() => this.onSwipeLeft()}
-        onSwipeRight={() => this.onSwipeRight()}
-        config={swipeConfig}
-        style={{
-          flex: 1,
-          backgroundColor: colors.white,
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          paddingLeft: 10,
-          paddingRight: 10
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => {
-            if (can.album != '') {
-              const request = {
-                clientID: CLIENT_ID,
-                albumID: can.album,
-                componentID: this.state.componentId,
-                title: can.title
-              };
-              this.props.getAlbumImages(request);
-            } else {
-              toImageScreen(this.state.componentId, [{ url: can.link }], can.title);
-            }
-          }}
-        >
-          <FastImage
-            source={{ uri: can.link, priority: FastImage.priority.normal }}
-            style={{ width: 220, height: 300, marginTop: 20 }}
-          />
-        </TouchableOpacity>
-        <BrandText>{can.brand}</BrandText>
-        <InfoText>{can.info}</InfoText>
-        <Delimiter />
-        <KeyValueTextPair>
-          <BoldAttributeName>Country of Origin: </BoldAttributeName>
-          <AttributeValue>{can.origin}</AttributeValue>
-        </KeyValueTextPair>
-        <KeyValueTextPair>
-          <BoldAttributeName>Bought in: </BoldAttributeName>
-          <AttributeValue>{can.bought}</AttributeValue>
-        </KeyValueTextPair>
-        <KeyValueTextPair>
-          <BoldAttributeName>Can Color: </BoldAttributeName>
-          <AttributeValue>{can.color}</AttributeValue>
-        </KeyValueTextPair>
-        <KeyValueTextPair>
-          <BoldAttributeName>Size: </BoldAttributeName>
-          <AttributeValue>{can.quantity}</AttributeValue>
-        </KeyValueTextPair>
-        <KeyValueTextPair>
-          <BoldAttributeName>Ownership: </BoldAttributeName>
-          <AttributeValue>{can.ownership}</AttributeValue>
-        </KeyValueTextPair>
-      </GestureRecognizer>
+      <If
+        condition={this.props.loading}
+        then={<Spinner />}
+        else={
+          <GestureRecognizer
+            onSwipeLeft={() => this.onSwipeLeft()}
+            onSwipeRight={() => this.onSwipeRight()}
+            config={swipeConfig}
+            style={{
+              flex: 1,
+              backgroundColor: colors.white,
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+              paddingLeft: 10,
+              paddingRight: 10
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                if (can.album != '') {
+                  const request = {
+                    clientID: CLIENT_ID,
+                    albumID: can.album,
+                    componentID: this.state.componentId,
+                    title: can.title
+                  };
+                  this.props.getAlbumImages(request);
+                } else {
+                  toImageScreen(this.state.componentId, [{ url: can.link }], can.title);
+                }
+              }}
+            >
+              <FastImage
+                source={{ uri: can.link, priority: FastImage.priority.normal }}
+                style={{ width: 220, height: 300, marginTop: 20 }}
+              />
+            </TouchableOpacity>
+
+            <BrandText>{can.brand}</BrandText>
+            <InfoText>{can.info}</InfoText>
+            <Delimiter />
+            <KeyValueTextPair>
+              <BoldAttributeName>Country of Origin: </BoldAttributeName>
+              <AttributeValue>{can.origin}</AttributeValue>
+            </KeyValueTextPair>
+            <KeyValueTextPair>
+              <BoldAttributeName>Bought in: </BoldAttributeName>
+              <AttributeValue>{can.bought}</AttributeValue>
+            </KeyValueTextPair>
+            <KeyValueTextPair>
+              <BoldAttributeName>Can Color: </BoldAttributeName>
+              <AttributeValue>{can.color}</AttributeValue>
+            </KeyValueTextPair>
+            <KeyValueTextPair>
+              <BoldAttributeName>Size: </BoldAttributeName>
+              <AttributeValue>{can.quantity}</AttributeValue>
+            </KeyValueTextPair>
+            <KeyValueTextPair>
+              <BoldAttributeName>Ownership: </BoldAttributeName>
+              <AttributeValue>{can.ownership}</AttributeValue>
+            </KeyValueTextPair>
+          </GestureRecognizer>
+        }
+      />
     );
   }
 }

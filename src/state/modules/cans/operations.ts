@@ -2,7 +2,7 @@ import { GetCansRequest, GetImagesRequest } from './types';
 import * as actions from './actions';
 import { getType } from 'typesafe-actions';
 import { all, takeLatest, CallEffect } from 'redux-saga/effects';
-import { call, put, take } from 'redux-saga-test-plan/matchers';
+import { call, put } from 'redux-saga-test-plan/matchers';
 import { beerCanApi } from '../../../api/beerCanApi';
 import { getErrorMessage, setAccessToken } from '../../../api/network';
 import { toImageScreen } from '../../../navigation/navigations';

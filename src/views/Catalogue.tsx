@@ -1,4 +1,4 @@
-import { FlatList } from 'react-native';
+import { FlatList, NetInfo } from 'react-native';
 import { Component } from 'react';
 import React from 'react';
 // @ts-ignore
@@ -10,7 +10,7 @@ import GestureRecognizer from 'react-native-swipe-gestures';
 
 import { CanState, imageData } from '../state/modules/cans/types';
 import { CatalogueItem, NavigationButton, Spinner, TopBarWithSearchBar } from '../components';
-import { toDetailsScreen } from '../navigation/navigations';
+import { toDetailsScreen, toNoConnectionScreen } from '../navigation/navigations';
 import { RootState } from '../state/store';
 import { getCanState } from '../state/modules/cans/selectors';
 import { bindActionCreators, Dispatch } from 'redux';
@@ -49,10 +49,18 @@ class Catalogue extends Component<Props, State> {
   private mounted: boolean = false;
   componentDidMount() {
     this.mounted = true;
+    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
   }
   componentWillUnmount() {
+    NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
     this.mounted = false;
   }
+
+  handleConnectivityChange = (isConnected: boolean) => {
+    if (!isConnected && this.props.data.length === 0) {
+      toNoConnectionScreen();
+    }
+  };
 
   componentWillReceiveProps(nextProps: Readonly<Props>, nextContext: any): void {
     if (nextProps.displayedData != this.props.displayedData && this.mounted) {

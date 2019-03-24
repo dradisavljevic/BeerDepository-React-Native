@@ -1,23 +1,40 @@
-import React, { FC } from 'react';
+import React, { Component } from 'react';
 // @ts-ignore
 import styled from 'styled-components';
 import colors from '../constants/colors';
 import sadBeer from '../assets/images/SadBeer512.png';
 import t from '../i18n/i18n';
+import { NetInfo } from 'react-native';
+import { toCatalogue } from '../navigation/navigations';
 
 type Props = {};
 
-const NoInternetConnectionScreen: FC<Props> = ({}) => {
-  return (
-    <MessageContainer>
-      <MessageHeader adjustsFontSizeToFit numberOfLines={1}>
-        {t.NO_INTERNET_CONNECTION}
-      </MessageHeader>
-      <CenteredImage source={sadBeer} />
-      <MessageInstructions>{t.PLEASE_CONNECT}</MessageInstructions>
-    </MessageContainer>
-  );
-};
+class NoInternetConnectionScreen extends Component<Props> {
+  componentDidMount() {
+    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
+  }
+  componentWillUnmount() {
+    NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
+  }
+
+  handleConnectivityChange = (isConnected: boolean) => {
+    if (isConnected) {
+      toCatalogue();
+    }
+  };
+
+  render() {
+    return (
+      <MessageContainer>
+        <MessageHeader adjustsFontSizeToFit numberOfLines={1}>
+          {t.NO_INTERNET_CONNECTION}
+        </MessageHeader>
+        <CenteredImage source={sadBeer} />
+        <MessageInstructions>{t.PLEASE_CONNECT}</MessageInstructions>
+      </MessageContainer>
+    );
+  }
+}
 
 const MessageContainer = styled.View`
   flex: 1;
