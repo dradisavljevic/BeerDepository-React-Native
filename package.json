@@ -25,6 +25,7 @@
     ]
   },
   "dependencies": {
+    "@ishawnwang/withunmounted": "^1.0.1",
     "apisauce": "^1.0.2",
     "prettier": "^1.16.4",
     "react": "16.6.3",

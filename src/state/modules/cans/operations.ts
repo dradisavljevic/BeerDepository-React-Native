@@ -5,8 +5,9 @@ import { all, takeLatest, CallEffect } from 'redux-saga/effects';
 import { call, put } from 'redux-saga-test-plan/matchers';
 import { beerCanApi } from '../../../api/beerCanApi';
 import { getErrorMessage, setAccessToken } from '../../../api/network';
-import { toImageScreen } from '../../../navigation/navigations';
+import { toImageScreen, toNoConnectionScreen } from '../../../navigation/navigations';
 import { extractImages } from '../../../utils/helpers';
+import { NetInfo } from 'react-native';
 
 function* geAllCans({ payload }: { payload: GetCansRequest }) {
   setAccessToken(payload.clientID);
@@ -28,6 +29,13 @@ function* getCansFromAlbum({ payload }: { payload: GetImagesRequest }) {
     toImageScreen(payload.componentID, extractImages(response.data.data), payload.title);
   } else {
     yield put(actions.getAlbumImages.failure(getErrorMessage(response)));
+    if (response.problem === 'TIMEOUT_ERROR') {
+      NetInfo.isConnected.fetch().then(isConnected => {
+        if (!isConnected) {
+          toNoConnectionScreen();
+        }
+      });
+    }
   }
 }
 

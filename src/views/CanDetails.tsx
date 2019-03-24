@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { TouchableOpacity } from 'react-native';
+import { NetInfo, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
@@ -20,6 +20,8 @@ import colors from '../constants/colors';
 import { detailsTopBar } from '../navigation/utils';
 import { Spinner } from '../components';
 import { If } from '../utils/helpers';
+import OfflineNotice from '../components/OfflineNotice';
+import globals from '../constants/globals';
 
 type PropsFromState = CanState;
 
@@ -31,7 +33,8 @@ type PropsFromDispatch = {
 type Props = PropsFromState & PropsFromDispatch;
 class CanDetails extends Component<Props> {
   state = {
-    componentId: ''
+    componentId: '',
+    clicked: false
   };
 
   onSwipeRight() {
@@ -76,6 +79,10 @@ class CanDetails extends Component<Props> {
 
   render() {
     const { can } = this.props;
+    let connection = true;
+    NetInfo.isConnected.fetch().then(isConnected => {
+      connection = isConnected;
+    });
     const swipeConfig = {
       velocityThreshold: 0.3,
       directionalOffsetThreshold: 80
@@ -99,8 +106,10 @@ class CanDetails extends Component<Props> {
               paddingRight: 10
             }}
           >
+            <If condition={this.state.clicked && connection && globals.isAndroid} then={<OfflineNotice />} />
             <TouchableOpacity
               onPress={() => {
+                this.setState({ clicked: true });
                 if (can.album != '') {
                   const request = {
                     clientID: CLIENT_ID,

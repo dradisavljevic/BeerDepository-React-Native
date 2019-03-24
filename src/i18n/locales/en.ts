@@ -6,7 +6,7 @@ const en: LanguageStringsObject = {
   TITLE: 'Beer Depository',
   SEARCH_CATALOGUE: 'Search beer catalogue...',
   NO_INTERNET_CONNECTION: 'No Internet Connection',
-  PLEASE_CONNECT: 'Please make sure you connect to the Internet and try again'
+  PLEASE_CONNECT: 'Please check your connection and try again later'
 };
 
 export default en;

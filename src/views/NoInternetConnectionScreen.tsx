@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 // @ts-ignore
 import styled from 'styled-components';
-import colors from '../constants/colors';
-import sadBeer from '../assets/images/SadBeer512.png';
-import t from '../i18n/i18n';
 import { NetInfo } from 'react-native';
 import { toCatalogue } from '../navigation/navigations';
+import sadBeer from '../assets/images/SadBeer512.png';
+
+import colors from '../constants/colors';
+import t from '../i18n/i18n';
 
 type Props = {};
 
@@ -18,6 +19,7 @@ class NoInternetConnectionScreen extends Component<Props> {
   }
 
   handleConnectivityChange = (isConnected: boolean) => {
+    console.log(isConnected);
     if (isConnected) {
       toCatalogue();
     }
@@ -41,7 +43,7 @@ const MessageContainer = styled.View`
   justify-content: center;
   align-items: center;
   background-color: ${colors.white};
-  padding-horizontal: 10;
+  padding-horizontal: 15;
 `;
 
 const CenteredImage = styled.Image`
