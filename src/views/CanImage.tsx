@@ -11,7 +11,7 @@ type Props = {
 class CanImage extends Component<Props> {
   render() {
     const { albumImages } = this.props;
-    return <ImageViewer backgroundColor={colors.black} imageUrls={albumImages} />;
+    return <ImageViewer backgroundColor={colors.black} imageUrls={albumImages} pageAnimateTime={150} />;
   }
 }
 

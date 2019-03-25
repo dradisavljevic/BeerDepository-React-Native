@@ -5,6 +5,7 @@ import configureStore from './state/store';
 import registerScreens from './navigation/screenRegistry';
 import { setDefaultOptions, toCatalogue } from './navigation/navigations';
 import SplashScreen from 'react-native-splash-screen';
+import './constants/reactotronConfig';
 
 const store = configureStore({});
 registerScreens(store);

@@ -9,3 +9,5 @@ export default {
   isLargeDevice: deviceWidth > 360,
   isSmallDevice: deviceWidth <= 320
 };
+
+export const useReactotron = __DEV__;

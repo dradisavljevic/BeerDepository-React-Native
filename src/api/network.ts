@@ -1,4 +1,6 @@
 import { create, ApisauceInstance, ApiErrorResponse } from 'apisauce';
+import Reactotron from 'reactotron-react-native';
+import { useReactotron } from '../constants/globals';
 
 const AUTHORIZATION_HEADER_NAME = 'Authorization';
 const authorizationUrls = ['/sign-in', '/refresh-token'];
@@ -21,3 +23,8 @@ network.addRequestTransform(request => {
     removeAccessToken();
   }
 });
+
+if (useReactotron) {
+  // @ts-ignore
+  network.addMonitor(Reactotron.apisauce);
+}
