@@ -92,6 +92,10 @@ class TopBarWithSearchBar extends Component<Props, State> {
                 }
                 this.setState({ searchBar: false });
               }}
+              onFocus={() => {
+                this.setState({ search: '' });
+              }}
+              renderClear={this.state.search != ''}
             />
           }
         />
