@@ -20,7 +20,7 @@ const IconView: FC<Props> = ({ style, name, size, color, onPress }) => {
   );
 };
 
-const Container = styled.View`
+const Container = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
 `;

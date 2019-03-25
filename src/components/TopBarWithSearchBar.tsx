@@ -83,7 +83,7 @@ class TopBarWithSearchBar extends Component<Props, State> {
                 this.setState({ searchBar: false });
               }}
               onBack={() => {
-                this.setState({ searchBar: true });
+                this.setState({ searchBar: false });
               }}
               onEndEditing={() => {
                 if (search.length != 0) {

@@ -5,8 +5,7 @@ import colors from '../constants/colors';
 import { ICON_MARGIN, ICON_PADDING, MATERIAL_ICON_SIZE, TITLE_FONT_SIZE } from '../constants/dimensions';
 import { IconView } from './index';
 import { styles } from './ComponentStyles';
-import { Dimensions, GestureResponderEvent } from 'react-native';
-import { render } from 'enzyme';
+import { Dimensions, GestureResponderEvent, ScrollView } from 'react-native';
 import { If } from '../utils/helpers';
 
 const { width } = Dimensions.get('window');
@@ -44,20 +43,22 @@ const SearchBar: FC<Props> = ({
         onPress={onBack}
       />
       <InputContainer>
-        <SearchBarInput
-          placeholder={placeholder}
-          autoCorrect={false}
-          autoComplete={'off'}
-          autoCapitalize={'none'}
-          autoFocus={autoFocus}
-          value={value}
-          onChangeText={onChangeText}
-          onEndEditing={onEndEditing}
-          placeholderTextColor={colors.baliHai}
-          onFocus={onFocus}
-          maxLength={300}
-          keyboardAppearance={'default'}
-        />
+        <ScrollView>
+          <SearchBarInput
+            placeholder={placeholder}
+            autoCorrect={false}
+            autoComplete={'off'}
+            autoCapitalize={'none'}
+            autoFocus={autoFocus}
+            value={value}
+            onChangeText={onChangeText}
+            onEndEditing={onEndEditing}
+            placeholderTextColor={colors.baliHai}
+            onFocus={onFocus}
+            keyboardAppearance={'default'}
+            underlineColorAndroid={'transparent'}
+          />
+        </ScrollView>
       </InputContainer>
       <If
         condition={renderClear}
@@ -93,7 +94,7 @@ const SearchBarContainer = styled.View`
   padding-vertical: 15;
   padding-horizontal: ${ICON_PADDING};
   margin-bottom: 5;
-  background-color: ${colors.white};
+  background-color: ${colors.black};
   width: ${width};
 `;
 
