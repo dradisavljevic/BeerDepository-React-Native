@@ -13,7 +13,7 @@ import { CanState } from '../state/modules/cans/types';
 import { RootState } from '../state/store';
 import { getCanState } from '../state/modules/cans/selectors';
 import * as actions from '../state/modules/cans/actions';
-import { toImageScreen, toNoConnectionScreen } from '../navigation/navigations';
+import { toImageScreen } from '../navigation/navigations';
 import { CLIENT_ID } from '../constants/authorization';
 
 import colors from '../constants/colors';
@@ -70,6 +70,9 @@ class CanDetails extends Component<Props> {
   componentDidMount() {
     this.mounted = true;
     NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
+    NetInfo.isConnected.fetch().then((isConnected: boolean) => {
+      this.setState({ isConnected: isConnected });
+    });
     Navigation.events().registerComponentDidAppearListener(({ componentId }) => {
       if (this.mounted) {
         this.setState({ componentId: componentId });
@@ -90,7 +93,7 @@ class CanDetails extends Component<Props> {
     const { can } = this.props;
 
     const swipeConfig = {
-      velocityThreshold: 0.3,
+      velocityThreshold: 0.6,
       directionalOffsetThreshold: 80
     };
 

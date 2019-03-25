@@ -1,4 +1,4 @@
-import { FlatList, NetInfo } from 'react-native';
+import { FlatList, NetInfo, Text, View } from 'react-native';
 import { Component } from 'react';
 import React from 'react';
 // @ts-ignore
@@ -93,7 +93,7 @@ class Catalogue extends Component<Props, State> {
   render() {
     const { content, page } = this.state;
     const swipeConfig = {
-      velocityThreshold: 0.3,
+      velocityThreshold: 0.7,
       directionalOffsetThreshold: 80
     };
     return (
@@ -109,11 +109,16 @@ class Catalogue extends Component<Props, State> {
       >
         <TopBarWithSearchBar />
         <If
-          condition={this.state.content.length != 0}
+          condition={!this.props.loading}
           then={
             <FlatList
               data={content.slice(page * 10, page * 10 + 10)}
               style={{ backgroundColor: colors.white }}
+              ListEmptyComponent={
+                <EmptyListNotice adjustsFontSizeToFit numberOfLines={1}>
+                  {t.EMPTY_LIST_NOTICE}
+                </EmptyListNotice>
+              }
               ref={ref => {
                 this.flatListRef = ref;
               }}
@@ -165,6 +170,14 @@ const ButtonFooter = styled.View`
   justify-content: center;
   align-items: center;
   flex-direction: row;
+`;
+
+const EmptyListNotice = styled.Text`
+  color: ${colors.darkCharcoal};
+  text-align: center;
+  font-size: 19;
+  padding-horizontal: 15;
+  padding-vertical: 15;
 `;
 
 const mapStateToProps = (state: RootState) => getCanState(state);
