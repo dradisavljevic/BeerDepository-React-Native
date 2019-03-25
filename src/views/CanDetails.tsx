@@ -13,7 +13,7 @@ import { CanState } from '../state/modules/cans/types';
 import { RootState } from '../state/store';
 import { getCanState } from '../state/modules/cans/selectors';
 import * as actions from '../state/modules/cans/actions';
-import { toImageScreen } from '../navigation/navigations';
+import { toImageScreen, toNoConnectionScreen } from '../navigation/navigations';
 import { CLIENT_ID } from '../constants/authorization';
 
 import colors from '../constants/colors';
@@ -34,7 +34,8 @@ type Props = PropsFromState & PropsFromDispatch;
 class CanDetails extends Component<Props> {
   state = {
     componentId: '',
-    clicked: false
+    clicked: false,
+    isConnected: NetInfo.isConnected.fetch()
   };
 
   onSwipeRight() {
@@ -65,24 +66,29 @@ class CanDetails extends Component<Props> {
   }
 
   private mounted: boolean = false;
+
   componentDidMount() {
     this.mounted = true;
+    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
     Navigation.events().registerComponentDidAppearListener(({ componentId }) => {
       if (this.mounted) {
         this.setState({ componentId: componentId });
       }
     });
   }
+
   componentWillUnmount() {
+    NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
     this.mounted = false;
   }
 
+  handleConnectivityChange = (isConnected: boolean) => {
+    this.setState({ isConnected: isConnected });
+  };
+
   render() {
     const { can } = this.props;
-    let connection = true;
-    NetInfo.isConnected.fetch().then(isConnected => {
-      connection = isConnected;
-    });
+
     const swipeConfig = {
       velocityThreshold: 0.3,
       directionalOffsetThreshold: 80
@@ -106,7 +112,7 @@ class CanDetails extends Component<Props> {
               paddingRight: 10
             }}
           >
-            <If condition={this.state.clicked && connection && globals.isAndroid} then={<OfflineNotice />} />
+            <If condition={this.state.clicked && !this.state.isConnected && globals.isAndroid} then={<OfflineNotice />} />
             <TouchableOpacity
               onPress={() => {
                 this.setState({ clicked: true });
