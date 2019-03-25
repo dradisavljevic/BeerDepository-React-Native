@@ -59,7 +59,7 @@ const SearchBar: FC<Props> = ({
             onFocus={onFocus}
             keyboardAppearance={'default'}
             underlineColorAndroid={'transparent'}
-            textAlignVertical={'center'}
+            textAlignVertical={'top'}
           />
         </ScrollView>
       </InputContainer>
@@ -83,7 +83,9 @@ const InputContainer = styled.View`
   background-color: ${colors.black};
   width: ${width - (MATERIAL_ICON_SIZE * 2 + 2 * ICON_PADDING + 2 * ICON_MARGIN)};
   margin-horizontal: ${ICON_MARGIN};
-  height: ${MATERIAL_ICON_SIZE};
+  height: ${MATERIAL_ICON_SIZE + 5};
+  justify-content: center;
+  align-items: center;
 `;
 
 const SearchBarInput = styled.TextInput`

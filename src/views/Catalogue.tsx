@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { Navigation } from 'react-native-navigation';
 // @ts-ignore
-import GestureRecognizer from 'react-native-swipe-gestures';
+import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 
 import { CanState, imageData } from '../state/modules/cans/types';
 import { CatalogueItem, NavigationButton, Spinner, TopBarWithSearchBar } from '../components';
@@ -38,6 +38,7 @@ type State = {
   content: imageData[];
   pageNumber: number;
   componentId: string;
+  scrolling: boolean;
 };
 
 type Props = OwnProps & PropsFromState & PropsFromDispatch;
@@ -46,7 +47,8 @@ class Catalogue extends Component<Props, State> {
     page: 0,
     content: this.props.displayedData,
     pageNumber: this.props.displayedData.length === 0 ? 0 : Math.floor((this.props.displayedData.length - 1) / 10),
-    componentId: ''
+    componentId: '',
+    scrolling: false
   };
   private flatListRef: FlatList<imageData> | null | undefined;
   private mounted: boolean = false;
@@ -75,15 +77,25 @@ class Catalogue extends Component<Props, State> {
     }
   }
 
-  onSwipeRight() {
-    if (this.state.page !== 0) {
-      this.setState({ page: this.state.page - 1 });
-    }
-  }
-
-  onSwipeLeft() {
-    if (this.state.page !== this.state.pageNumber) {
-      this.setState({ page: this.state.page + 1 });
+  onSwipe(gestureName: string) {
+    const { SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT } = swipeDirections;
+    switch (gestureName) {
+      case SWIPE_UP:
+        break;
+      case SWIPE_DOWN:
+        break;
+      case SWIPE_LEFT:
+        if (this.state.page !== this.state.pageNumber && !this.state.scrolling) {
+          this.setState({ page: this.state.page + 1 });
+          this.flatListRef!.scrollToOffset({ animated: true, offset: 0 });
+        }
+        break;
+      case SWIPE_RIGHT:
+        if (this.state.page !== 0 && !this.state.scrolling) {
+          this.flatListRef!.scrollToOffset({ animated: true, offset: 0 });
+          this.setState({ page: this.state.page - 1 });
+        }
+        break;
     }
   }
 
@@ -98,15 +110,14 @@ class Catalogue extends Component<Props, State> {
   }
 
   render() {
-    const { content, page } = this.state;
+    const { content, page, pageNumber } = this.state;
     const swipeConfig = {
       velocityThreshold: 0.7,
-      directionalOffsetThreshold: 80
+      directionalOffsetThreshold: 1500
     };
     return (
       <GestureRecognizer
-        onSwipeLeft={() => this.onSwipeLeft()}
-        onSwipeRight={() => this.onSwipeRight()}
+        onSwipe={(direction: string) => this.onSwipe(direction)}
         config={swipeConfig}
         style={{
           flex: 1,
@@ -116,11 +127,23 @@ class Catalogue extends Component<Props, State> {
       >
         <TopBarWithSearchBar />
         <If
+          condition={this.state.pageNumber != 0}
+          then={
+            <PageCounter>
+              <PageNumberLabel>
+                {t.PAGE} {page + 1} {t.OF} {pageNumber + 1}
+              </PageNumberLabel>
+            </PageCounter>
+          }
+        />
+        <If
           condition={!this.props.loading}
           then={
             <FlatList
               data={content.slice(page * 10, page * 10 + 10)}
               style={{ backgroundColor: colors.white }}
+              onMomentumScrollEnd={() => this.setState({ scrolling: false })}
+              onMomentumScrollBegin={() => this.setState({ scrolling: true })}
               ListEmptyComponent={
                 <If
                   condition={content.length === 0}
@@ -174,6 +197,21 @@ class Catalogue extends Component<Props, State> {
     );
   }
 }
+
+const PageCounter = styled.View`
+  width: 100%;
+  height: 30;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: ${colors.white};
+`;
+
+const PageNumberLabel = styled.Text`
+  font-size: 18;
+  font-weight: 600;
+  color: ${colors.baliHai};
+`;
 
 const ButtonFooter = styled.View`
   width: 100%;

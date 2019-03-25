@@ -7,7 +7,7 @@ import { bindActionCreators, Dispatch } from 'redux';
 import styled from 'styled-components';
 import { Navigation } from 'react-native-navigation';
 // @ts-ignore
-import GestureRecognizer from 'react-native-swipe-gestures';
+import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 
 import { CanState } from '../state/modules/cans/types';
 import { RootState } from '../state/store';
@@ -38,30 +38,37 @@ class CanDetails extends Component<Props> {
     isConnected: NetInfo.isConnected.fetch()
   };
 
-  onSwipeRight() {
-    const index = this.props.data.findIndex(x => x.id === this.props.can.id);
-    console.log(index);
-    if (index !== 0) {
-      const newCan = this.props.data[index - 1];
-      this.props.extractCanDetails(newCan);
-      Navigation.mergeOptions(this.state.componentId, {
-        // @ts-ignore
-        topBar: detailsTopBar(newCan.title)
-      });
-    }
-  }
-
-  onSwipeLeft() {
-    const index = this.props.data.findIndex(x => x.id === this.props.can.id);
-    console.log(index);
-    console.log(this.props.data.length);
-    if (index !== this.props.data.length - 1) {
-      const newCan = this.props.data[index + 1];
-      this.props.extractCanDetails(newCan);
-      Navigation.mergeOptions(this.state.componentId, {
-        // @ts-ignore
-        topBar: detailsTopBar(newCan.title)
-      });
+  onSwipe(gestureName: string) {
+    const { SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT } = swipeDirections;
+    let index = 0;
+    switch (gestureName) {
+      case SWIPE_UP:
+        break;
+      case SWIPE_DOWN:
+        break;
+      case SWIPE_LEFT:
+        index = this.props.data.findIndex(x => x.id === this.props.can.id);
+        console.log(this.props.data.length);
+        if (index !== this.props.data.length - 1) {
+          const newCan = this.props.data[index + 1];
+          this.props.extractCanDetails(newCan);
+          Navigation.mergeOptions(this.state.componentId, {
+            // @ts-ignore
+            topBar: detailsTopBar(newCan.title)
+          });
+        }
+        break;
+      case SWIPE_RIGHT:
+        index = this.props.data.findIndex(x => x.id === this.props.can.id);
+        if (index !== 0) {
+          const newCan = this.props.data[index - 1];
+          this.props.extractCanDetails(newCan);
+          Navigation.mergeOptions(this.state.componentId, {
+            // @ts-ignore
+            topBar: detailsTopBar(newCan.title)
+          });
+        }
+        break;
     }
   }
 
@@ -104,8 +111,7 @@ class CanDetails extends Component<Props> {
         else={
           <ScrollView>
             <GestureRecognizer
-              onSwipeLeft={() => this.onSwipeLeft()}
-              onSwipeRight={() => this.onSwipeRight()}
+              onSwipe={(direction: string) => this.onSwipe(direction)}
               config={swipeConfig}
               style={{
                 flex: 1,
