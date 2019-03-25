@@ -42,7 +42,7 @@ class Catalogue extends Component<Props, State> {
   state = {
     page: 0,
     content: this.props.displayedData,
-    pageNumber: Math.floor(this.props.displayedData.length / 10),
+    pageNumber: this.props.displayedData.length === 0 ? 0 : Math.floor((this.props.displayedData.length - 1) / 10),
     componentId: ''
   };
   private flatListRef: FlatList<imageData> | null | undefined;
@@ -64,7 +64,11 @@ class Catalogue extends Component<Props, State> {
 
   componentWillReceiveProps(nextProps: Readonly<Props>, nextContext: any): void {
     if (nextProps.displayedData != this.props.displayedData && this.mounted) {
-      this.setState({ content: nextProps.displayedData, pageNumber: Math.floor((nextProps.displayedData.length - 1) / 10) });
+      let size = 0;
+      if (nextProps.displayedData.length !== 0) {
+        size = nextProps.displayedData.length - 1;
+      }
+      this.setState({ content: nextProps.displayedData, pageNumber: Math.floor(size / 10), page: 0 });
     }
   }
 

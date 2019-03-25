@@ -50,32 +50,47 @@ class TopBarWithSearchBar extends Component<Props, State> {
               <If
                 condition={this.state.title != t.TITLE}
                 then={
-                  <Icon
-                    style={styles.clearFilterIcon}
-                    name={'clear'}
-                    size={MATERIAL_ICON_SIZE}
-                    color={colors.baliHai}
-                    onPress={() => {
-                      this.setState({ search: '', title: t.TITLE });
-                      this.props.removeSearchCans();
-                    }}
-                  />
+                  <IconView>
+                    <Icon
+                      style={styles.clearFilterIcon}
+                      name={'clear'}
+                      size={MATERIAL_ICON_SIZE}
+                      color={colors.baliHai}
+                      onPress={() => {
+                        this.setState({ search: '', title: t.TITLE });
+                        this.props.removeSearchCans();
+                      }}
+                    />
+                  </IconView>
                 }
               />
               <Title>{title}</Title>
-              <Icon
-                style={styles.searchIcon}
-                name={'search'}
-                size={MATERIAL_ICON_SIZE}
-                color={colors.baliHai}
-                onPress={() => {
-                  this.setState({ searchBar: true });
-                }}
-              />
+              <IconView>
+                <Icon
+                  style={styles.searchIcon}
+                  name={'search'}
+                  size={MATERIAL_ICON_SIZE}
+                  color={colors.baliHai}
+                  onPress={() => {
+                    this.setState({ searchBar: true });
+                  }}
+                />
+              </IconView>
             </TitleWrapper>
           }
           else={
             <SearchBarWrapper>
+              <IconView>
+                <Icon
+                  style={styles.backIcon}
+                  name={'arrow-back'}
+                  size={MATERIAL_ICON_SIZE}
+                  color={colors.baliHai}
+                  onPress={() => {
+                    this.setState({ searchBar: false });
+                  }}
+                />
+              </IconView>
               <SearchBar
                 placeholder={t.SEARCH_CATALOGUE}
                 onChangeText={this.updateSearch}
@@ -83,15 +98,13 @@ class TopBarWithSearchBar extends Component<Props, State> {
                 autoCorrect={false}
                 autoCapitalize={'none'}
                 autoFocus={true}
-                containerStyle={styles.topBarBackground}
+                containerStyle={styles.searchBarContainer}
                 inputStyle={styles.styledInput}
-                inputContainerStyle={styles.topBarBackground}
+                inputContainerStyle={styles.inputContainer}
                 leftIconContainerStyle={styles.topBarBackground}
                 rightIconContainerStyle={styles.topBarBackground}
+                enablesReturnKeyAutomatically={true}
                 searchIcon={false}
-                onFocus={() => {
-                  this.setState({ search: '' });
-                }}
                 onClear={() => {
                   this.setState({ searchBar: false });
                 }}
@@ -130,25 +143,50 @@ const Title = styled.Text`
 `;
 
 const SearchBarWrapper = styled.View`
+  flex-direction: row;
   padding-vertical: 2;
   padding-horizontal: 2;
+`;
+
+const IconView = styled.View`
+  justify-content: center;
+  align-items: center;
 `;
 
 const styles = StyleSheet.create({
   topBarBackground: {
     backgroundColor: colors.black
   },
+  searchBarContainer: {
+    backgroundColor: colors.black,
+    flex: 1,
+    justifyContent: 'center'
+  },
   styledInput: {
     backgroundColor: colors.black,
-    color: colors.white
+    color: colors.white,
+    textAlignVertical: 'center',
+    paddingTop: 0,
+    paddingBottom: 0,
+    fontSize: TITLE_FONT_SIZE
+  },
+  inputContainer: {
+    backgroundColor: colors.black,
+    marginLeft: -14,
+    marginTop: -1
   },
   searchIcon: {
-    width: MATERIAL_ICON_SIZE
+    width: MATERIAL_ICON_SIZE,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  backIcon: {
+    width: MATERIAL_ICON_SIZE,
+    marginLeft: 15
   },
   clearFilterIcon: {
     width: MATERIAL_ICON_SIZE,
-    marginRight: 10,
-    marginTop: 3
+    marginRight: 10
   }
 });
 
