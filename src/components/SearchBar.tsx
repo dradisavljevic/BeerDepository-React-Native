@@ -1,12 +1,14 @@
 import React, { FC } from 'react';
 // @ts-ignore
 import styled from 'styled-components';
-import colors from '../constants/colors';
-import { ICON_MARGIN, ICON_PADDING, MATERIAL_ICON_SIZE, TITLE_FONT_SIZE } from '../constants/dimensions';
-import { IconView } from './index';
-import { styles } from './ComponentStyles';
 import { Dimensions, GestureResponderEvent, ScrollView } from 'react-native';
+
+import { styles } from './IconStyles';
+import IconView from './IconView';
 import { If } from '../utils/helpers';
+
+import { ICON_MARGIN, ICON_PADDING, MATERIAL_ICON_SIZE, TITLE_FONT_SIZE } from '../constants/dimensions';
+import colors from '../constants/colors';
 
 const { width } = Dimensions.get('window');
 

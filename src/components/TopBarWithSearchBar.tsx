@@ -9,12 +9,13 @@ import { RootState } from '../state/store';
 import { getCanState } from '../state/modules/cans/selectors';
 import * as actions from '../state/modules/cans/actions';
 import { CanState } from '../state/modules/cans/types';
+import { styles } from './IconStyles';
+import IconView from './IconView';
+import SearchBar from './SearchBar';
 
 import { MATERIAL_ICON_SIZE, TITLE_FONT_SIZE } from '../constants/dimensions';
 import t from '../i18n/i18n';
 import colors from '../constants/colors';
-import { IconView, SearchBar } from './index';
-import { styles } from './ComponentStyles';
 
 type PropsFromState = CanState;
 
