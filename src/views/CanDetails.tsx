@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { NetInfo, TouchableOpacity } from 'react-native';
+import { NetInfo, ScrollView, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
@@ -102,66 +102,69 @@ class CanDetails extends Component<Props> {
         condition={this.props.loading}
         then={<Spinner />}
         else={
-          <GestureRecognizer
-            onSwipeLeft={() => this.onSwipeLeft()}
-            onSwipeRight={() => this.onSwipeRight()}
-            config={swipeConfig}
-            style={{
-              flex: 1,
-              backgroundColor: colors.white,
-              alignItems: 'center',
-              justifyContent: 'flex-start',
-              paddingLeft: 10,
-              paddingRight: 10
-            }}
-          >
-            <If condition={this.state.clicked && !this.state.isConnected && globals.isAndroid} then={<OfflineNotice />} />
-            <TouchableOpacity
-              onPress={() => {
-                this.setState({ clicked: true });
-                if (can.album != '') {
-                  const request = {
-                    clientID: CLIENT_ID,
-                    albumID: can.album,
-                    componentID: this.state.componentId,
-                    title: can.title
-                  };
-                  this.props.getAlbumImages(request);
-                } else {
-                  toImageScreen(this.state.componentId, [{ url: can.link }], can.title);
-                }
+          <ScrollView>
+            <GestureRecognizer
+              onSwipeLeft={() => this.onSwipeLeft()}
+              onSwipeRight={() => this.onSwipeRight()}
+              config={swipeConfig}
+              style={{
+                flex: 1,
+                backgroundColor: colors.white,
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+                paddingLeft: 10,
+                paddingRight: 10,
+                paddingBottom: 20
               }}
             >
-              <FastImage
-                source={{ uri: can.link, priority: FastImage.priority.normal }}
-                style={{ width: 220, height: 300, marginTop: 20 }}
-              />
-            </TouchableOpacity>
+              <If condition={this.state.clicked && !this.state.isConnected && globals.isAndroid} then={<OfflineNotice />} />
+              <TouchableOpacity
+                onPress={() => {
+                  this.setState({ clicked: true });
+                  if (can.album != '') {
+                    const request = {
+                      clientID: CLIENT_ID,
+                      albumID: can.album,
+                      componentID: this.state.componentId,
+                      title: can.title
+                    };
+                    this.props.getAlbumImages(request);
+                  } else {
+                    toImageScreen(this.state.componentId, [{ url: can.link }], can.title);
+                  }
+                }}
+              >
+                <FastImage
+                  source={{ uri: can.link, priority: FastImage.priority.normal }}
+                  style={{ width: 220, height: 300, marginTop: 20 }}
+                />
+              </TouchableOpacity>
 
-            <BrandText>{can.brand}</BrandText>
-            <InfoText>{can.info}</InfoText>
-            <Delimiter />
-            <KeyValueTextPair>
-              <BoldAttributeName>Country of Origin: </BoldAttributeName>
-              <AttributeValue>{can.origin}</AttributeValue>
-            </KeyValueTextPair>
-            <KeyValueTextPair>
-              <BoldAttributeName>Bought in: </BoldAttributeName>
-              <AttributeValue>{can.bought}</AttributeValue>
-            </KeyValueTextPair>
-            <KeyValueTextPair>
-              <BoldAttributeName>Can Color: </BoldAttributeName>
-              <AttributeValue>{can.color}</AttributeValue>
-            </KeyValueTextPair>
-            <KeyValueTextPair>
-              <BoldAttributeName>Size: </BoldAttributeName>
-              <AttributeValue>{can.quantity}</AttributeValue>
-            </KeyValueTextPair>
-            <KeyValueTextPair>
-              <BoldAttributeName>Ownership: </BoldAttributeName>
-              <AttributeValue>{can.ownership}</AttributeValue>
-            </KeyValueTextPair>
-          </GestureRecognizer>
+              <BrandText>{can.brand}</BrandText>
+              <InfoText>{can.info}</InfoText>
+              <Delimiter />
+              <KeyValueTextPair>
+                <BoldAttributeName>Country of Origin: </BoldAttributeName>
+                <AttributeValue>{can.origin}</AttributeValue>
+              </KeyValueTextPair>
+              <KeyValueTextPair>
+                <BoldAttributeName>Bought in: </BoldAttributeName>
+                <AttributeValue>{can.bought}</AttributeValue>
+              </KeyValueTextPair>
+              <KeyValueTextPair>
+                <BoldAttributeName>Can Color: </BoldAttributeName>
+                <AttributeValue>{can.color}</AttributeValue>
+              </KeyValueTextPair>
+              <KeyValueTextPair>
+                <BoldAttributeName>Size: </BoldAttributeName>
+                <AttributeValue>{can.quantity}</AttributeValue>
+              </KeyValueTextPair>
+              <KeyValueTextPair>
+                <BoldAttributeName>Ownership: </BoldAttributeName>
+                <AttributeValue>{can.ownership}</AttributeValue>
+              </KeyValueTextPair>
+            </GestureRecognizer>
+          </ScrollView>
         }
       />
     );

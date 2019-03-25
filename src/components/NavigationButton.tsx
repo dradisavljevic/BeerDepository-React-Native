@@ -27,7 +27,6 @@ const Container = styled.TouchableOpacity`
   shadow-offset: 0px 2px;
   shadow-opacity: 0.8;
   elevation: 1;
-  margin-bottom: 10;
   margin-horizontal: 10;
   opacity: ${(props: { disabled: boolean }) => (props.disabled ? 0.3 : 1)};
 `;

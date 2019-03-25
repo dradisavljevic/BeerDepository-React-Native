@@ -64,7 +64,7 @@ class Catalogue extends Component<Props, State> {
 
   componentWillReceiveProps(nextProps: Readonly<Props>, nextContext: any): void {
     if (nextProps.displayedData != this.props.displayedData && this.mounted) {
-      this.setState({ content: nextProps.displayedData, pageNumber: Math.floor(nextProps.displayedData.length / 10) });
+      this.setState({ content: nextProps.displayedData, pageNumber: Math.floor((nextProps.displayedData.length - 1) / 10) });
     }
   }
 
@@ -115,9 +115,14 @@ class Catalogue extends Component<Props, State> {
               data={content.slice(page * 10, page * 10 + 10)}
               style={{ backgroundColor: colors.white }}
               ListEmptyComponent={
-                <EmptyListNotice adjustsFontSizeToFit numberOfLines={1}>
-                  {t.EMPTY_LIST_NOTICE}
-                </EmptyListNotice>
+                <If
+                  condition={content.length === 0}
+                  then={
+                    <EmptyListNotice adjustsFontSizeToFit numberOfLines={1}>
+                      {t.EMPTY_LIST_NOTICE}
+                    </EmptyListNotice>
+                  }
+                />
               }
               ref={ref => {
                 this.flatListRef = ref;
@@ -165,7 +170,7 @@ class Catalogue extends Component<Props, State> {
 
 const ButtonFooter = styled.View`
   width: 100%;
-  height: 90;
+  height: 70;
   background-color: ${colors.white};
   justify-content: center;
   align-items: center;
