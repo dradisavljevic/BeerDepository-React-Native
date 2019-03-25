@@ -20,14 +20,14 @@ const Container = styled.TouchableOpacity`
   padding-vertical: 10;
   text-align: center;
   background-color: ${colors.gainsboro};
-  width: 40%;
   align-items: center;
   justify-content: center;
   shadow-color: ${colors.black};
   shadow-offset: 0px 2px;
   shadow-opacity: 0.8;
   elevation: 1;
-  margin-horizontal: 10;
+  margin-horizontal: 5;
+  width: 45%;
   opacity: ${(props: { disabled: boolean }) => (props.disabled ? 0.3 : 1)};
 `;
 

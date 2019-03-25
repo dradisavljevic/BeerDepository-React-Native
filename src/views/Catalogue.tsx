@@ -1,4 +1,4 @@
-import { FlatList, NetInfo, Text, View } from 'react-native';
+import { FlatList, NetInfo } from 'react-native';
 import { Component } from 'react';
 import React from 'react';
 // @ts-ignore
@@ -19,10 +19,13 @@ import { If } from '../utils/helpers';
 
 import colors from '../constants/colors';
 import t from '../i18n/i18n';
+import globals from '../constants/globals';
 
 type OwnProps = {
   displayedData: imageData[];
 };
+
+const marginSize = globals.isIos ? 15 : 0;
 
 type PropsFromState = CanState;
 
@@ -179,6 +182,7 @@ const ButtonFooter = styled.View`
   justify-content: center;
   align-items: center;
   flex-direction: row;
+  margin-bottom: ${marginSize};
 `;
 
 const EmptyListNotice = styled.Text`
