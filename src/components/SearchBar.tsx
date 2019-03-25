@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 // @ts-ignore
 import styled from 'styled-components';
 import colors from '../constants/colors';
-import { ICON_PADDING, MATERIAL_ICON_SIZE, TITLE_FONT_SIZE } from '../constants/dimensions';
+import { ICON_MARGIN, ICON_PADDING, MATERIAL_ICON_SIZE, TITLE_FONT_SIZE } from '../constants/dimensions';
 import { IconView } from './index';
 import { styles } from './ComponentStyles';
 import { Dimensions, GestureResponderEvent } from 'react-native';
@@ -16,9 +16,10 @@ type Props = {
   autoFocus: boolean;
   onBack: ((event: GestureResponderEvent) => void) | undefined;
   onClear: ((event: GestureResponderEvent) => void) | undefined;
+  onEndEditing: () => void;
 };
 
-const SearchBar: FC<Props> = ({ placeholder, onChangeText, value, autoFocus, onBack, onClear }) => {
+const SearchBar: FC<Props> = ({ placeholder, onChangeText, value, autoFocus, onBack, onClear, onEndEditing }) => {
   return (
     <SearchBarContainer>
       <IconView
@@ -32,10 +33,12 @@ const SearchBar: FC<Props> = ({ placeholder, onChangeText, value, autoFocus, onB
         <SearchBarInput
           placeholder={placeholder}
           autoCorrect={false}
+          autoComplete={'off'}
           autoCapitalize={'none'}
           autoFocus={autoFocus}
           value={value}
           onChangeText={onChangeText}
+          onEndEditing={onEndEditing}
         />
       </InputContainer>
       <IconView
@@ -51,8 +54,8 @@ const SearchBar: FC<Props> = ({ placeholder, onChangeText, value, autoFocus, onB
 
 const InputContainer = styled.View`
   background-color: ${colors.black};
-  width: ${width - (MATERIAL_ICON_SIZE * 2 + 2 * ICON_PADDING)};
-  margin-horizontal: 10;
+  width: ${width - (MATERIAL_ICON_SIZE * 2 + 2 * ICON_PADDING + 2 * ICON_MARGIN)};
+  margin-horizontal: ${ICON_MARGIN};
 `;
 
 const SearchBarInput = styled.TextInput`
