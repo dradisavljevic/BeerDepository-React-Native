@@ -24,7 +24,7 @@ export enum SwipeDirections {
 export enum SwiperTypes {
   HORIZONTAL = 'HORIZONTAL',
   VERTICAL = 'VERTICAL',
-  CROSS = 'CROSS'
+  COMBINED = 'COMBINED'
 }
 
 type Configuration = {
@@ -38,7 +38,7 @@ const swipeConfig: Configuration = {
   velocityThreshold: 0.3,
   directionalOffsetThreshold: 80,
   gestureIsClickThreshold: 25,
-  swiperType: SwiperTypes.CROSS
+  swiperType: SwiperTypes.COMBINED
 };
 
 type Props = {
@@ -120,7 +120,7 @@ class Swiper extends Component<Props> {
     const { SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN } = SwipeDirections;
     const { dx, dy } = gestureState;
 
-    if (this.swipeConfig.swiperType === SwiperTypes.CROSS || this.swipeConfig.swiperType === SwiperTypes.HORIZONTAL) {
+    if (this.swipeConfig.swiperType === SwiperTypes.COMBINED || this.swipeConfig.swiperType === SwiperTypes.HORIZONTAL) {
       if (Math.abs(dx) > Math.abs(dy)) {
         if (this.isValidHorizontalSwipe(gestureState)) {
           return dx > 0 ? SWIPE_RIGHT : SWIPE_LEFT;
