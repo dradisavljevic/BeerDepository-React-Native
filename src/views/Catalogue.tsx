@@ -5,8 +5,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { Navigation } from 'react-native-navigation';
-// @ts-ignore
-import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 
 import { CanState, imageData } from '../state/modules/cans/types';
 import { CatalogueItem, NavigationButton, Spinner, TopBarWithSearchBar } from '../components';
@@ -16,6 +14,7 @@ import { getCanState } from '../state/modules/cans/selectors';
 import { bindActionCreators, Dispatch } from 'redux';
 import * as actions from '../state/modules/cans/actions';
 import { If } from '../utils/helpers';
+import Swiper, { SwipeDirections } from '../components/Swiper';
 
 import colors from '../constants/colors';
 import t from '../i18n/i18n';
@@ -78,12 +77,8 @@ class Catalogue extends Component<Props, State> {
   }
 
   onSwipe = (gestureName: string) => {
-    const { SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT } = swipeDirections;
+    const { SWIPE_LEFT, SWIPE_RIGHT } = SwipeDirections;
     switch (gestureName) {
-      case SWIPE_UP:
-        break;
-      case SWIPE_DOWN:
-        break;
       case SWIPE_LEFT:
         if (this.state.page !== this.state.pageNumber && !this.state.scrolling) {
           this.setState({ page: this.state.page + 1 });
@@ -111,12 +106,9 @@ class Catalogue extends Component<Props, State> {
 
   render() {
     const { content, page, pageNumber } = this.state;
-    const swipeConfig = {
-      velocityThreshold: 0.7,
-      directionalOffsetThreshold: 1500
-    };
+    const swipeConfig = globals.swipeConfig;
     return (
-      <GestureRecognizer
+      <Swiper
         onSwipe={(direction: string) => this.onSwipe(direction)}
         config={swipeConfig}
         style={{
@@ -193,7 +185,7 @@ class Catalogue extends Component<Props, State> {
             {t.NEXT_BUTTON.toUpperCase()}
           </NavigationButton>
         </ButtonFooter>
-      </GestureRecognizer>
+      </Swiper>
     );
   }
 }

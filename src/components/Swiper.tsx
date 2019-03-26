@@ -4,16 +4,24 @@
  */
 
 import React, { Component } from 'react';
-import { PanResponder, View, PanResponderInstance, GestureResponderEvent, PanResponderGestureState } from 'react-native';
+import {
+  PanResponder,
+  View,
+  PanResponderInstance,
+  GestureResponderEvent,
+  PanResponderGestureState,
+  ViewStyle,
+  StyleProp
+} from 'react-native';
 
-export enum swipeDirections {
+export enum SwipeDirections {
   SWIPE_UP = 'SWIPE_UP',
   SWIPE_DOWN = 'SWIPE_DOWN',
   SWIPE_LEFT = 'SWIPE_LEFT',
   SWIPE_RIGHT = 'SWIPE_RIGHT'
 }
 
-export enum swiperTypes {
+export enum SwiperTypes {
   HORIZONTAL = 'HORIZONTAL',
   VERTICAL = 'VERTICAL',
   CROSS = 'CROSS'
@@ -23,23 +31,24 @@ type Configuration = {
   velocityThreshold: number;
   directionalOffsetThreshold: number;
   gestureIsClickThreshold: number;
-  swiperType: swiperTypes;
+  swiperType: SwiperTypes;
 };
 
 const swipeConfig: Configuration = {
   velocityThreshold: 0.3,
   directionalOffsetThreshold: 80,
   gestureIsClickThreshold: 25,
-  swiperType: swiperTypes.CROSS
+  swiperType: SwiperTypes.CROSS
 };
 
 type Props = {
   config: Configuration;
-  onSwipe?: (direction: swipeDirections, gestState: PanResponderGestureState) => any;
+  onSwipe?: (direction: SwipeDirections, gestState: PanResponderGestureState) => any;
   onSwipeLeft?: (gestureState: PanResponderGestureState) => any;
   onSwipeRight?: (gestureState: PanResponderGestureState) => any;
   onSwipeUp?: (gestureState: PanResponderGestureState) => any;
   onSwipeDown?: (gestureState: PanResponderGestureState) => any;
+  style: StyleProp<ViewStyle>;
 };
 class Swiper extends Component<Props> {
   private panResponder: PanResponderInstance | undefined;
@@ -75,15 +84,21 @@ class Swiper extends Component<Props> {
   };
 
   gestureIsClick = (gestureState: PanResponderGestureState) => {
-    return (
-      Math.abs(gestureState.dx) < this.swipeConfig.gestureIsClickThreshold &&
-      Math.abs(gestureState.dy) < this.swipeConfig.gestureIsClickThreshold
-    );
+    if (this.swipeConfig.swiperType === SwiperTypes.HORIZONTAL) {
+      return Math.abs(gestureState.dx) < this.swipeConfig.gestureIsClickThreshold;
+    } else if (this.swipeConfig.swiperType === SwiperTypes.VERTICAL) {
+      return Math.abs(gestureState.dy) < this.swipeConfig.gestureIsClickThreshold;
+    } else {
+      return (
+        Math.abs(gestureState.dx) < this.swipeConfig.gestureIsClickThreshold &&
+        Math.abs(gestureState.dy) < this.swipeConfig.gestureIsClickThreshold
+      );
+    }
   };
 
-  triggerSwipeHandlers = (swipeDirection: swipeDirections, gestureState: PanResponderGestureState) => {
+  triggerSwipeHandlers = (swipeDirection: SwipeDirections, gestureState: PanResponderGestureState) => {
     const { onSwipe, onSwipeUp, onSwipeDown, onSwipeLeft, onSwipeRight } = this.props;
-    const { SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN } = swipeDirections;
+    const { SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN } = SwipeDirections;
     onSwipe && onSwipe(swipeDirection, gestureState);
     switch (swipeDirection) {
       case SWIPE_LEFT:
@@ -102,17 +117,17 @@ class Swiper extends Component<Props> {
   };
 
   getSwipeDirection = (gestureState: PanResponderGestureState) => {
-    const { SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN } = swipeDirections;
+    const { SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN } = SwipeDirections;
     const { dx, dy } = gestureState;
 
-    if (this.swipeConfig.swiperType === swiperTypes.CROSS || this.swipeConfig.swiperType === swiperTypes.HORIZONTAL) {
-      if (this.swipeConfig.swiperType === swiperTypes.CROSS && Math.abs(dx) > Math.abs(dy)) {
+    if (this.swipeConfig.swiperType === SwiperTypes.CROSS || this.swipeConfig.swiperType === SwiperTypes.HORIZONTAL) {
+      if (Math.abs(dx) > Math.abs(dy)) {
         if (this.isValidHorizontalSwipe(gestureState)) {
           return dx > 0 ? SWIPE_RIGHT : SWIPE_LEFT;
         }
       }
     }
-    if (this.swipeConfig.swiperType != swiperTypes.HORIZONTAL) {
+    if (this.swipeConfig.swiperType != SwiperTypes.HORIZONTAL) {
       if (this.isValidVerticalSwipe(gestureState)) {
         return dy > 0 ? SWIPE_DOWN : SWIPE_UP;
       }
