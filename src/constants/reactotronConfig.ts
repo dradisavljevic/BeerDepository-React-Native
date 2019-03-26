@@ -4,9 +4,9 @@ import { reactotronRedux as reduxPlugin } from 'reactotron-redux';
 import sagaPlugin from 'reactotron-redux-saga';
 // @ts-ignore
 import apisaucePlugin from 'reactotron-apisauce';
-import { useReactotron } from './globals';
+import globals from './globals';
 
-if (useReactotron) {
+if (globals.useReactotron) {
   Reactotron.configure({
     // host: '10.0.3.2' // default is localhost (on android don't forget to `adb reverse tcp:9090 tcp:9090`)
     name: 'Beer Depository' // would you like to see your app's name?,

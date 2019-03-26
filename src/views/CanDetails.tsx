@@ -6,20 +6,19 @@ import { bindActionCreators, Dispatch } from 'redux';
 // @ts-ignore
 import styled from 'styled-components';
 import { Navigation } from 'react-native-navigation';
-// @ts-ignore
-import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 
 import { CanState } from '../state/modules/cans/types';
 import { RootState } from '../state/store';
 import { getCanState } from '../state/modules/cans/selectors';
 import * as actions from '../state/modules/cans/actions';
 import { toImageScreen } from '../navigation/navigations';
-import { CLIENT_ID } from '../constants/authorization';
-
-import colors from '../constants/colors';
 import { detailsTopBar } from '../navigation/utils';
 import { Spinner } from '../components';
 import { If } from '../utils/helpers';
+import Swiper, { SwipeDirections } from '../components/Swiper';
+
+import colors from '../constants/colors';
+import { CLIENT_ID } from '../constants/authorization';
 import OfflineNotice from '../components/OfflineNotice';
 import globals from '../constants/globals';
 
@@ -39,13 +38,9 @@ class CanDetails extends Component<Props> {
   };
 
   onSwipe(gestureName: string) {
-    const { SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT } = swipeDirections;
+    const { SWIPE_LEFT, SWIPE_RIGHT } = SwipeDirections;
     let index = 0;
     switch (gestureName) {
-      case SWIPE_UP:
-        break;
-      case SWIPE_DOWN:
-        break;
       case SWIPE_LEFT:
         index = this.props.data.findIndex(x => x.id === this.props.can.id);
         console.log(this.props.data.length);
@@ -99,10 +94,7 @@ class CanDetails extends Component<Props> {
   render() {
     const { can } = this.props;
 
-    const swipeConfig = {
-      velocityThreshold: 0.6,
-      directionalOffsetThreshold: 80
-    };
+    const swipeConfig = globals.swipeConfig;
 
     return (
       <If
@@ -110,7 +102,7 @@ class CanDetails extends Component<Props> {
         then={<Spinner />}
         else={
           <ScrollView>
-            <GestureRecognizer
+            <Swiper
               onSwipe={(direction: string) => this.onSwipe(direction)}
               config={swipeConfig}
               style={{
@@ -169,7 +161,7 @@ class CanDetails extends Component<Props> {
                 <BoldAttributeName>Ownership: </BoldAttributeName>
                 <AttributeValue>{can.ownership}</AttributeValue>
               </KeyValueTextPair>
-            </GestureRecognizer>
+            </Swiper>
           </ScrollView>
         }
       />
