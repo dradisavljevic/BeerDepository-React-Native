@@ -77,7 +77,7 @@ class Catalogue extends Component<Props, State> {
     }
   }
 
-  onSwipe(gestureName: string) {
+  onSwipe = (gestureName: string) => {
     const { SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT } = swipeDirections;
     switch (gestureName) {
       case SWIPE_UP:
@@ -97,7 +97,7 @@ class Catalogue extends Component<Props, State> {
         }
         break;
     }
-  }
+  };
 
   constructor(props: Props) {
     super(props);
