@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 // @ts-ignore
 import styled from 'styled-components';
-import { Dimensions, GestureResponderEvent, ScrollView } from 'react-native';
+import { GestureResponderEvent, ScrollView } from 'react-native';
 
 import { styles } from './IconStyles';
 import IconView from './IconView';
@@ -9,8 +9,7 @@ import { If } from '../utils/helpers';
 
 import { ICON_MARGIN, ICON_PADDING, MATERIAL_ICON_SIZE, TITLE_FONT_SIZE } from '../constants/dimensions';
 import colors from '../constants/colors';
-
-const { width } = Dimensions.get('window');
+import globals from '../constants/globals';
 
 type Props = {
   placeholder: string;
@@ -81,7 +80,7 @@ const SearchBar: FC<Props> = ({
 
 const InputContainer = styled.View`
   background-color: ${colors.black};
-  width: ${width - (MATERIAL_ICON_SIZE * 2 + 2 * ICON_PADDING + 2 * ICON_MARGIN)};
+  width: ${globals.deviceWidth - (MATERIAL_ICON_SIZE * 2 + 2 * ICON_PADDING + 2 * ICON_MARGIN)};
   margin-horizontal: ${ICON_MARGIN};
   height: ${MATERIAL_ICON_SIZE + 5};
   justify-content: center;
@@ -101,7 +100,7 @@ const SearchBarContainer = styled.View`
   padding-horizontal: ${ICON_PADDING};
   margin-bottom: 5;
   background-color: ${colors.black};
-  width: ${width};
+  width: ${globals.deviceWidth};
 `;
 
 export default SearchBar;

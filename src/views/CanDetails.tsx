@@ -13,13 +13,13 @@ import { getCanState } from '../state/modules/cans/selectors';
 import * as actions from '../state/modules/cans/actions';
 import { toImageScreen } from '../navigation/navigations';
 import { detailsTopBar } from '../navigation/utils';
-import { Spinner } from '../components';
+import { Spinner, OfflineNotice } from '../components';
 import { If } from '../utils/helpers';
 import Swiper, { SwipeDirections } from '../components/Swiper';
 
 import colors from '../constants/colors';
 import { CLIENT_ID } from '../constants/authorization';
-import OfflineNotice from '../components/OfflineNotice';
+
 import globals from '../constants/globals';
 
 type PropsFromState = CanState;
@@ -99,7 +99,12 @@ class CanDetails extends Component<Props> {
     return (
       <If
         condition={this.props.loading}
-        then={<Spinner />}
+        then={
+          <FlexContainer>
+            <If condition={this.state.clicked && !this.state.isConnected} then={<OfflineNotice />} />
+            <Spinner />
+          </FlexContainer>
+        }
         else={
           <ScrollView>
             <Swiper
@@ -110,12 +115,12 @@ class CanDetails extends Component<Props> {
                 backgroundColor: colors.white,
                 alignItems: 'center',
                 justifyContent: 'flex-start',
-                paddingLeft: 10,
-                paddingRight: 10,
+                paddingLeft: 15,
+                paddingRight: 15,
                 paddingBottom: 20
               }}
             >
-              <If condition={this.state.clicked && !this.state.isConnected && globals.isAndroid} then={<OfflineNotice />} />
+              <If condition={this.state.clicked && !this.state.isConnected} then={<OfflineNotice />} />
               <TouchableOpacity
                 onPress={() => {
                   this.setState({ clicked: true });
@@ -128,13 +133,15 @@ class CanDetails extends Component<Props> {
                     };
                     this.props.getAlbumImages(request);
                   } else {
-                    toImageScreen(this.state.componentId, [{ url: can.link }], can.title);
+                    if (this.state.isConnected) {
+                      toImageScreen(this.state.componentId, [{ url: can.link }], can.title);
+                    }
                   }
                 }}
               >
                 <FastImage
                   source={{ uri: can.link, priority: FastImage.priority.normal }}
-                  style={{ width: 220, height: 300, marginTop: 20 }}
+                  style={{ width: 220, height: 300, marginTop: 20, borderRadius: 20 }}
                 />
               </TouchableOpacity>
 
@@ -201,6 +208,11 @@ const InfoText = styled.Text`
   font-size: 22;
   color: ${colors.darkCharcoal};
   text-align: center;
+  font-style: italic;
+`;
+
+const FlexContainer = styled.View`
+  flex: 1;
 `;
 
 const mapStateToProps = (state: RootState) => getCanState(state);

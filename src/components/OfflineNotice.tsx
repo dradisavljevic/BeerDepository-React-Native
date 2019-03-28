@@ -1,12 +1,10 @@
 import React, { PureComponent } from 'react';
-import { Dimensions } from 'react-native';
 // @ts-ignore
 import styled from 'styled-components';
 
 import colors from '../constants/colors';
 import t from '../i18n/i18n';
-
-const { width } = Dimensions.get('window');
+import globals from '../constants/globals';
 
 class OfflineNotice extends PureComponent {
   render() {
@@ -24,7 +22,7 @@ const OfflineNoticeContainer = styled.View`
   justify-content: center;
   align-items: center;
   flex-direction: row;
-  width: ${width};
+  width: ${globals.deviceWidth};
 `;
 
 const OfflineNoticeText = styled.Text`
