@@ -34,7 +34,7 @@
     "apisauce": "^1.0.2",
     "prettier": "^1.16.4",
     "react": "16.6.3",
-    "react-native": "0.58.6",
+    "react-native": "^0.60.3",
     "react-native-elements": "^1.1.0",
     "react-native-image-zoom-viewer": "^2.2.25",
     "react-native-localization": "^2.1.0",
