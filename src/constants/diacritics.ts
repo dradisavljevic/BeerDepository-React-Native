@@ -1,9 +1,12 @@
-interface diacriticMap {
+/**
+ * Dictionary of all letters containing diacritics.
+ */
+interface DiacriticMap {
   [key: string]: string;
 }
 
 // noinspection NonAsciiCharacters
-const diacritics: diacriticMap = {
+const diacritics: DiacriticMap = {
   ẚ: 'a',
   Á: 'a',
   á: 'a',

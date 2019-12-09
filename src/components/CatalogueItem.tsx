@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
 import FastImage from 'react-native-fast-image';
+import React, { FC } from 'react';
+import { StyleSheet } from 'react-native';
 // @ts-ignore
 import styled from 'styled-components';
-
 import colors from '../constants/colors';
 
 type Props = {
@@ -12,9 +12,12 @@ type Props = {
   onPress: () => void;
 };
 
+/**
+ * Functional component representing item in catalogue.
+ */
 const CatalogueItem: FC<Props> = ({ link, title, description, onPress }) => (
   <ItemWrapper onPress={onPress}>
-    <FastImage source={{ uri: link, priority: FastImage.priority.normal }} style={{ width: 60, height: 100 }} />
+    <FastImage source={{ uri: link, priority: FastImage.priority.normal }} style={styles.image} />
     <TextWrapper>
       <Title adjustsFontSizeToFit numberOfLines={1}>
         {title}
@@ -23,6 +26,14 @@ const CatalogueItem: FC<Props> = ({ link, title, description, onPress }) => (
     </TextWrapper>
   </ItemWrapper>
 );
+
+const styles = StyleSheet.create({
+  image: {
+    width: 65,
+    height: 100,
+    borderRadius: 10
+  }
+});
 
 const Title = styled.Text`
   text-align: center;

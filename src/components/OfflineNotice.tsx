@@ -1,20 +1,19 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 // @ts-ignore
 import styled from 'styled-components';
 
 import colors from '../constants/colors';
-import t from '../i18n/i18n';
 import globals from '../constants/globals';
+import t from '../i18n/i18n';
 
-class OfflineNotice extends PureComponent {
-  render() {
-    return (
-      <OfflineNoticeContainer>
-        <OfflineNoticeText>{t.NO_INTERNET_CONNECTION}</OfflineNoticeText>
-      </OfflineNoticeContainer>
-    );
-  }
-}
+/**
+ * Offline notice status bar component.
+ */
+const OfflineNotice = () => (
+  <OfflineNoticeContainer>
+    <OfflineNoticeText>{t.NO_INTERNET_CONNECTION}</OfflineNoticeText>
+  </OfflineNoticeContainer>
+);
 
 const OfflineNoticeContainer = styled.View`
   background-color: ${colors.wineRed};

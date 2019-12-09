@@ -1,32 +1,59 @@
-import React, { Component } from 'react';
-
-import { Navigation } from 'react-native-navigation';
-import configureStore from './state/store';
-import registerScreens from './navigation/screenRegistry';
-import { setDefaultOptions, toCatalogue } from './navigation/navigations';
+import React, { useEffect } from 'react';
 import SplashScreen from 'react-native-splash-screen';
-import './constants/reactotronConfig';
+import { createAppContainer, createSwitchNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 
-const store = configureStore({});
-registerScreens(store);
+import CatalogueScreen from './screens/CatalogueScreen';
+import DetailsScreen from './screens/DetailsScreen';
+import ImageScreen from './screens/ImageScreen';
+import NoInternetConnectionScreen from './screens/NoInternetConnectionScreen';
 
-type Props = {};
-export default class App extends Component<Props> {
-  constructor(props: Props) {
-    super(props);
+import { setNavigator } from './utils/navigationRef';
+import colors from './constants/colors';
 
-    this.startApp();
-  }
+const switchNavigator = createSwitchNavigator({
+  internetFlow: createStackNavigator({
+    Catalogue: {
+      screen: CatalogueScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
+    Details: {
+      screen: DetailsScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
+    Images: {
+      screen: ImageScreen,
+      navigationOptions: {
+        header: null
+      }
+    }
+  }),
+  noInternetFlow: createStackNavigator({
+    NoInternet: {
+      screen: NoInternetConnectionScreen,
+      navigationOptions: {
+        header: null
+      }
+    }
+  })
+});
 
-  componentDidMount() {
+const App = createAppContainer(switchNavigator);
+
+export default () => {
+  useEffect(() => {
     SplashScreen.hide();
-  }
+  }, []);
 
-  startApp = () => {
-    // navigation and store config
-    Navigation.events().registerAppLaunchedListener(() => {
-      setDefaultOptions();
-      toCatalogue();
-    });
-  };
-}
+  return (
+    <App
+      ref={navigator => {
+        setNavigator(navigator);
+      }}
+    />
+  );
+};

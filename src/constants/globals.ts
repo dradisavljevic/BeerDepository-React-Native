@@ -1,6 +1,9 @@
 import { Platform, Dimensions } from 'react-native';
 import { SwiperTypes } from '../components/Swiper';
 
+/**
+ * Global configuration file.
+ */
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
@@ -11,15 +14,12 @@ const swipeConfig = {
   swiperType: SwiperTypes.HORIZONTAL
 };
 
-const useReactotron = __DEV__;
-
 export default {
   deviceWidth,
   deviceHeight,
+  swipeConfig,
   isAndroid: Platform.OS === 'android',
   isIos: Platform.OS === 'ios',
   isLargeDevice: deviceWidth > 360,
-  isSmallDevice: deviceWidth <= 320,
-  swipeConfig,
-  useReactotron
+  isSmallDevice: deviceWidth <= 320
 };

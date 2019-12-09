@@ -1,3 +1,6 @@
+/**
+ * Dictionary of all the named colors.
+ */
 interface ColorPalette {
   [key: string]: string;
 }
