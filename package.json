@@ -61,7 +61,7 @@
     "eslint": "6.6.0",
     "jest": "24.9.0",
     "jest-fetch-mock": "^2.1.1",
-    "lint-staged": "^8.1.5",
+    "lint-staged": "^13.1.0",
     "react-dom": "^16.8.3",
     "react-native-fast-image": "^7.0.2",
     "tslint": "^5.13.1",
