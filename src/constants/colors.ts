@@ -1597,7 +1597,7 @@ const colors: ColorPalette = {
   conditioner: '#FFFFCC',
   lightYellow2: '#FFFFE0',
   ivory: '#FFFFF0',
-  white: '#FFFFFF'
+  white: '#FFFFFF',
 };
 
 export default colors;

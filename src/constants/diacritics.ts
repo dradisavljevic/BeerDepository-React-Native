@@ -651,7 +651,7 @@ const diacritics: DiacriticMap = {
   ⱬ: 'z',
   Ǯ: 'z',
   ǯ: 'z',
-  ƺ: 'z'
+  ƺ: 'z',
 };
 
 export default diacritics;

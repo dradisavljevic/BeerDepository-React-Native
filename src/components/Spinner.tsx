@@ -1,8 +1,5 @@
-import React, { FC } from 'react';
-import { ActivityIndicator } from 'react-native';
-// @ts-ignore
-import styled from 'styled-components';
-
+import React, {FC} from 'react';
+import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import colors from '../constants/colors';
 
 type Props = {
@@ -12,17 +9,19 @@ type Props = {
 /**
  * Functional component representing loading spinner.
  */
-const Spinner: FC<Props> = ({ size = 'large' }) => (
-  <SpinnerContainer>
+const Spinner: FC<Props> = ({size = 'large'}) => (
+  <View style={styles.spinnerContainerStyle}>
     <ActivityIndicator size={size} />
-  </SpinnerContainer>
+  </View>
 );
 
-const SpinnerContainer = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-  background-color: ${colors.white};
-`;
+const styles = StyleSheet.create({
+  spinnerContainerStyle: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.white,
+  },
+});
 
 export default Spinner;

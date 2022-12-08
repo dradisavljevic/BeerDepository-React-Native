@@ -1,28 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import ImageViewer from 'react-native-image-zoom-viewer';
-import { StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-navigation';
+import {StyleSheet} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import beerApi from '../api/api';
-import { Spinner, TitleTopBar } from '../components';
-import { extractImages } from '../utils/helpers';
+import {Spinner, TitleTopBar} from '../components';
+import {extractImages} from '../utils/helpers';
+import If from '../utils/conditional';
+import {StackParamList} from '../utils/navigationTypes';
+import {IImageInfo} from 'react-native-image-zoom-viewer/built/image-viewer.type';
 
 import colors from '../constants/colors';
 
 /**
  * Screen component for can images.
  */
-const ImageScreen = ({ navigation }) => {
-  const _can = navigation.getParam('_can');
-  const [links, setLinks] = useState([]);
+const ImageScreen = ({
+  navigation,
+  route,
+}: NativeStackScreenProps<StackParamList, 'Image'>) => {
+  const _can = route.params._can;
+  const [links, setLinks] = useState<IImageInfo[]>([]);
 
   /**
    * Asynchronous get request for all the can images.
    */
   const getImages = async () => {
-    let imageArray = [];
+    let imageArray: IImageInfo[] = [];
     if (_can.album !== '') {
-      const response = await beerApi
+      await beerApi
         .get(_can.album)
         .then(response => {
           const data = response.data.data.images;
@@ -38,22 +45,29 @@ const ImageScreen = ({ navigation }) => {
           }
         });
     } else {
-      imageArray = [{ url: _can.link }];
+      imageArray = [{url: _can.link}];
     }
     setLinks(imageArray);
   };
 
   useEffect(() => {
     getImages();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <SafeAreaView forceInset={{ top: 'always' }} style={styles.safeArea}>
-      <TitleTopBar title={_can.title} onBack={() => navigation.goBack(null)} />
+    <SafeAreaView style={styles.safeArea}>
+      <TitleTopBar title={_can.title} onBack={() => navigation.goBack()} />
       <If
         condition={links.length === 0}
         then={<Spinner />}
-        else={<ImageViewer backgroundColor={colors.black} imageUrls={links} pageAnimateTime={150} />}
+        else={
+          <ImageViewer
+            backgroundColor={colors.black}
+            imageUrls={links}
+            pageAnimateTime={150}
+          />
+        }
       />
     </SafeAreaView>
   );
@@ -62,8 +76,8 @@ const ImageScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: colors.black
-  }
+    backgroundColor: colors.black,
+  },
 });
 
 export default ImageScreen;

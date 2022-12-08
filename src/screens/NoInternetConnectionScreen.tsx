@@ -1,18 +1,23 @@
 import NetInfo from '@react-native-community/netinfo';
-import React, { useEffect } from 'react';
-// @ts-ignore
-import styled from 'styled-components';
-
+import React, {useEffect} from 'react';
+import {StyleSheet, Text, View, Image} from 'react-native';
 import sadBeer from '../assets/images/SadBeer512.png';
 import colors from '../constants/colors';
 import t from '../i18n/i18n';
+import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {StackParamList} from '../utils/navigationTypes';
 
 /**
  * Screen component for a no internet connection notice.
  */
-const NoInternetConnectionScreen = ({ navigation }) => {
+const NoInternetConnectionScreen = ({
+  navigation,
+}: NativeStackScreenProps<StackParamList, 'NoInternet'>) => {
   useEffect(() => {
-    NetInfo.isConnected.addEventListener('connectionChange', handleConnectivityChange);
+    NetInfo.addEventListener(state => {
+      handleConnectivityChange(state.isConnected!);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /**
@@ -20,45 +25,51 @@ const NoInternetConnectionScreen = ({ navigation }) => {
    */
   const handleConnectivityChange = (isConnected: boolean) => {
     if (isConnected) {
-      NetInfo.isConnected.removeEventListener('connectionChange', handleConnectivityChange);
+      // NetInfo.isConnected.removeEventListener(
+      //   'connectionChange',
+      //   handleConnectivityChange,
+      // );
       navigation.navigate('Catalogue');
     }
   };
 
   return (
-    <MessageContainer>
-      <MessageHeader adjustsFontSizeToFit numberOfLines={1}>
+    <View style={styles.messageContainerStyle}>
+      <Text
+        style={styles.messageHeaderStyle}
+        adjustsFontSizeToFit
+        numberOfLines={1}>
         {t.NO_INTERNET_CONNECTION}
-      </MessageHeader>
-      <CenteredImage source={sadBeer} />
-      <MessageInstructions>{t.PLEASE_CONNECT}</MessageInstructions>
-    </MessageContainer>
+      </Text>
+      <Image style={styles.centeredImageStyle} source={sadBeer} />
+      <Text style={styles.messageInstructionsStyle}>{t.PLEASE_CONNECT}</Text>
+    </View>
   );
 };
 
-const MessageContainer = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-  background-color: ${colors.white};
-  padding-horizontal: 15;
-`;
-
-const CenteredImage = styled.Image`
-  height: 256;
-  width: 256;
-`;
-
-const MessageHeader = styled.Text`
-  font-size: 32;
-  text-align: center;
-  margin-vertical: 10;
-`;
-const MessageInstructions = styled.Text`
-  text-align: center;
-  color: ${colors.gray};
-  margin-bottom: 5;
-  font-size: 21;
-`;
+const styles = StyleSheet.create({
+  messageContainerStyle: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.white,
+    paddingHorizontal: 15,
+  },
+  centeredImageStyle: {
+    height: 256,
+    width: 256,
+  },
+  messageHeaderStyle: {
+    fontSize: 32,
+    textAlign: 'center',
+    marginVertical: 10,
+  },
+  messageInstructionsStyle: {
+    textAlign: 'center',
+    color: colors.gray,
+    marginBottom: 5,
+    fontSize: 21,
+  },
+});
 
 export default NoInternetConnectionScreen;

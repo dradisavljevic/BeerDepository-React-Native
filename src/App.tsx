@@ -1,48 +1,16 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
-import { createAppContainer, createSwitchNavigator } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
 
 import CatalogueScreen from './screens/CatalogueScreen';
 import DetailsScreen from './screens/DetailsScreen';
 import ImageScreen from './screens/ImageScreen';
 import NoInternetConnectionScreen from './screens/NoInternetConnectionScreen';
+import {StackParamList} from './utils/navigationTypes';
 
-import { setNavigator } from './utils/navigationRef';
-import colors from './constants/colors';
-
-const switchNavigator = createSwitchNavigator({
-  internetFlow: createStackNavigator({
-    Catalogue: {
-      screen: CatalogueScreen,
-      navigationOptions: {
-        header: null
-      }
-    },
-    Details: {
-      screen: DetailsScreen,
-      navigationOptions: {
-        header: null
-      }
-    },
-    Images: {
-      screen: ImageScreen,
-      navigationOptions: {
-        header: null
-      }
-    }
-  }),
-  noInternetFlow: createStackNavigator({
-    NoInternet: {
-      screen: NoInternetConnectionScreen,
-      navigationOptions: {
-        header: null
-      }
-    }
-  })
-});
-
-const App = createAppContainer(switchNavigator);
+const Stack = createNativeStackNavigator<StackParamList>();
 
 export default () => {
   useEffect(() => {
@@ -50,10 +18,31 @@ export default () => {
   }, []);
 
   return (
-    <App
-      ref={navigator => {
-        setNavigator(navigator);
-      }}
-    />
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Catalogue"
+            options={{headerShown: false}}
+            component={CatalogueScreen}
+          />
+          <Stack.Screen
+            name="Details"
+            options={{headerShown: false}}
+            component={DetailsScreen}
+          />
+          <Stack.Screen
+            name="Image"
+            options={{headerShown: false}}
+            component={ImageScreen}
+          />
+          <Stack.Screen
+            name="NoInternet"
+            options={{headerShown: false}}
+            component={NoInternetConnectionScreen}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 };

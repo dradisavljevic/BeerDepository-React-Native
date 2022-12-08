@@ -1,8 +1,12 @@
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { GestureResponderEvent, StyleProp, TextStyle } from 'react-native';
-import React, { FC } from 'react';
-// @ts-ignore
-import styled from 'styled-components';
+import {
+  GestureResponderEvent,
+  StyleProp,
+  TextStyle,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
+import React, {FC} from 'react';
 
 type Props = {
   style: StyleProp<TextStyle>;
@@ -15,15 +19,23 @@ type Props = {
 /**
  * Functional component material icon wrapper.
  */
-const IconView: FC<Props> = ({ style, name, size, color, onPress }) => (
-  <Container>
-    <Icon style={style} name={name} size={size} color={color} onPress={onPress} />
-  </Container>
+const IconView: FC<Props> = ({style, name, size, color, onPress}) => (
+  <TouchableOpacity style={styles.containerStyle}>
+    <Icon
+      style={style}
+      name={name}
+      size={size}
+      color={color}
+      onPress={onPress}
+    />
+  </TouchableOpacity>
 );
 
-const Container = styled.TouchableOpacity`
-  justify-content: center;
-  align-items: center;
-`;
+const styles = StyleSheet.create({
+  containerStyle: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 export default IconView;

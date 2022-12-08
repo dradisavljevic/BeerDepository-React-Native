@@ -1,34 +1,33 @@
-import React, { useState } from 'react';
-// @ts-ignore
-import styled from 'styled-components';
+import React, {useState} from 'react';
+import {StyleSheet, View, Text} from 'react-native';
 
-import { styles } from './IconStyles';
+import {styles as externalStyles} from './IconStyles';
 import IconView from './IconView';
 import If from '../utils/conditional';
 import SearchBar from './SearchBar';
 
-import { MATERIAL_ICON_SIZE, TITLE_FONT_SIZE, ICON_MARGIN } from '../constants/dimensions';
+import {MATERIAL_ICON_SIZE, TITLE_FONT_SIZE} from '../constants/dimensions';
 import t from '../i18n/i18n';
 import colors from '../constants/colors';
 
 /**
  * TopBar component wrapped around a searchbar.
  */
-const TopBarWithSearchBar = ({ searchAction, clearSearch }) => {
+const TopBarWithSearchBar = ({searchAction, clearSearch}) => {
   const [search, setSearch] = useState(''); // search term
-  const [searchBar, setSearchBar] = useState(false); // should searchbar be shown
+  const [searchBar, setSearchBar] = useState(false); // should se archbar be shown
   const [title, setTitle] = useState(t.TITLE); // current title. Default if no previous search has been done.
   return (
-    <TopBarWrapper>
+    <View style={styles.topBarWrapperStyle}>
       <If
         condition={!searchBar}
         then={
-          <TitleWrapper>
+          <View style={styles.titleWrapperStyle}>
             <If
               condition={title !== t.TITLE}
               then={
                 <IconView
-                  style={styles.clearFilterIcon}
+                  style={externalStyles.clearFilterIcon}
                   name={'clear'}
                   size={MATERIAL_ICON_SIZE}
                   color={colors.baliHai}
@@ -40,9 +39,9 @@ const TopBarWithSearchBar = ({ searchAction, clearSearch }) => {
                 />
               }
             />
-            <Title>{title}</Title>
+            <Text style={styles.titleStyle}>{title}</Text>
             <IconView
-              style={styles.searchIcon}
+              style={externalStyles.searchIcon}
               name={'search'}
               size={MATERIAL_ICON_SIZE}
               color={colors.baliHai}
@@ -50,7 +49,7 @@ const TopBarWithSearchBar = ({ searchAction, clearSearch }) => {
                 setSearchBar(true);
               }}
             />
-          </TitleWrapper>
+          </View>
         }
         else={
           <SearchBar
@@ -78,26 +77,26 @@ const TopBarWithSearchBar = ({ searchAction, clearSearch }) => {
           />
         }
       />
-    </TopBarWrapper>
+    </View>
   );
 };
 
-const TopBarWrapper = styled.View`
-  height: 60;
-`;
-
-const TitleWrapper = styled.View`
-  flex-direction: row;
-  padding-vertical: 15;
-  padding-horizontal: 15;
-  margin-bottom: 5;
-`;
-
-const Title = styled.Text`
-  flex: 1;
-  color: ${colors.white};
-  justify-content: center;
-  font-size: ${TITLE_FONT_SIZE};
-`;
+const styles = StyleSheet.create({
+  topBarWrapperStyle: {
+    height: 60,
+  },
+  titleWrapperStyle: {
+    flexDirection: 'row',
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    marginBottom: 5,
+  },
+  titleStyle: {
+    flex: 1,
+    color: colors.white,
+    justifyContent: 'center',
+    fontSize: TITLE_FONT_SIZE,
+  },
+});
 
 export default TopBarWithSearchBar;

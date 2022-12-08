@@ -1,38 +1,43 @@
 import React from 'react';
-// @ts-ignore
-import styled from 'styled-components';
+import {StyleSheet, TouchableOpacity, Text} from 'react-native';
 
 import colors from '../constants/colors';
 
 /**
  * Functional component used to navigate catalogue pages.
  */
-const CatalogueButton = ({ onPress, children, disabled }) => (
-  <Container onPress={() => onPress()} disabled={disabled}>
-    <ButtonText>{children.toUpperCase()}</ButtonText>
-  </Container>
+const CatalogueButton = ({onPress, children, disabled}) => (
+  <TouchableOpacity
+    style={styles(disabled).containerStyle}
+    onPress={() => onPress()}
+    disabled={disabled}>
+    <Text style={styles().buttonTextStyle}>{children.toUpperCase()}</Text>
+  </TouchableOpacity>
 );
 
-const Container = styled.TouchableOpacity`
-  padding-vertical: 10;
-  text-align: center;
-  background-color: ${colors.gainsboro};
-  align-items: center;
-  justify-content: center;
-  shadow-color: ${colors.black};
-  shadow-offset: 0px 2px;
-  shadow-opacity: 0.8;
-  elevation: 1;
-  margin-horizontal: 5;
-  width: 45%;
-  opacity: ${(props: { disabled: boolean }) => (props.disabled ? 0.3 : 1)};
-`;
-
-const ButtonText = styled.Text`
-  font-size: 14;
-  color: ${colors.black};
-  font-weight: 600;
-  font-style: normal;
-`;
+const styles = (disabled?: boolean) =>
+  StyleSheet.create({
+    containerStyle: {
+      paddingVertical: 10,
+      textAlign: 'center',
+      backgroundColor: colors.gainsboro,
+      alignItems: 'center',
+      justifyContent: 'center',
+      shadowColor: colors.black,
+      shadowOpacity: 0.8,
+      shadowOffset: {width: 0, height: 2},
+      elevation: 1,
+      marginHorizontal: 5,
+      marginVertical: 15,
+      width: '45%',
+      opacity: disabled! ? 0.3 : 1,
+    },
+    buttonTextStyle: {
+      fontSize: 14,
+      color: colors.black,
+      fontWeight: '600',
+      fontStyle: 'normal',
+    },
+  });
 
 export default CatalogueButton;

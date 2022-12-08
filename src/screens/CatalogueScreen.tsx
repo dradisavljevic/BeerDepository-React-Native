@@ -1,45 +1,57 @@
-import React, { useEffect, useState } from 'react';
-import { FlatList, Text, View, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-navigation';
-// @ts-ignore
-import styled from 'styled-components';
+import React, {useEffect, useState, useRef} from 'react';
+import {FlatList, Text, View, StyleSheet} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import beerApi from '../api/api';
-import { CatalogueButton, CatalogueItem, Spinner, TopBarWithSearchBar } from '../components';
-import Swiper, { SwipeDirections } from '../components/Swiper';
-import { clearDescription, extractDetails, filterCans } from '../utils/helpers';
+import {
+  CatalogueButton,
+  CatalogueItem,
+  Spinner,
+  TopBarWithSearchBar,
+} from '../components';
+import Swiper, {SwipeDirections} from '../components/Swiper';
+import {clearDescription, filterCans} from '../utils/helpers';
 
-import { ALBUM_ID } from '../constants/authorization';
+import {ALBUM_ID} from '../constants/authorization';
 import colors from '../constants/colors';
 import globals from '../constants/globals';
-import { imageData } from '../constants/types';
+import {imageData} from '../constants/types';
 import t from '../i18n/i18n';
+import If from '../utils/conditional';
+import {StackParamList} from '../utils/navigationTypes';
 
 /**
  * Screen component for can catalogue.
  */
-const CatalogueScreen = ({ navigation }) => {
-  const [content, setContent] = useState([]);
+const CatalogueScreen = ({
+  navigation,
+}: NativeStackScreenProps<StackParamList, 'Catalogue'>) => {
+  type ItemType = {link: string; title: string; description: string};
+  const [content, setContent] = useState<imageData[]>([]);
   const [scrolling, setScrolling] = useState(false);
   const [page, setPage] = useState(0);
   const [pageNumber, setPageNumber] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [flatList, setFlatList] = useState(null);
-  const [catalogue, setCatalogue] = useState([]);
+  const [catalogue, setCatalogue] = useState<imageData[]>([]);
+  let flatListRef: any = useRef<HTMLDivElement>(null);
 
   /**
    * Asynchronous get request for all the cans in catalogue.
    */
   const getList = async () => {
-    const response = await beerApi
+    await beerApi
       .get(ALBUM_ID)
       .then(response => {
-        const data = clearDescription(response.data.data.images).sort((a: imageData, b: imageData) => {
-          return a.title > b.title ? 1 : -1;
-        });
+        const data = clearDescription(response.data.data.images).sort(
+          (a: imageData, b: imageData) => {
+            return a.title > b.title ? 1 : -1;
+          },
+        );
         setContent(data);
         setCatalogue(data);
-        const pages = data.length === 0 ? 0 : Math.floor((data.length - 1) / 10);
+        const pages =
+          data.length === 0 ? 0 : Math.floor((data.length - 1) / 10);
         setPageNumber(pages);
         setLoading(false);
       })
@@ -59,13 +71,14 @@ const CatalogueScreen = ({ navigation }) => {
    */
   useEffect(() => {
     getList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /**
    * Search function that filters through cans.
    */
   const searchCans = (term: string) => {
-    data = filterCans(term, catalogue);
+    let data = filterCans(term, catalogue);
     const pages = data.length === 0 ? 0 : Math.floor((data.length - 1) / 10);
     setPageNumber(pages);
     setPage(0);
@@ -77,7 +90,8 @@ const CatalogueScreen = ({ navigation }) => {
    */
   const clearSearch = () => {
     setContent(catalogue);
-    const pages = catalogue.length === 0 ? 0 : Math.floor((catalogue.length - 1) / 10);
+    const pages =
+      catalogue.length === 0 ? 0 : Math.floor((catalogue.length - 1) / 10);
     setPageNumber(pages);
     setPage(0);
   };
@@ -86,17 +100,17 @@ const CatalogueScreen = ({ navigation }) => {
    * Function handler for swiping actions.
    */
   const onSwipe = (gestureName: string) => {
-    const { SWIPE_LEFT, SWIPE_RIGHT } = SwipeDirections;
+    const {SWIPE_LEFT, SWIPE_RIGHT} = SwipeDirections;
     switch (gestureName) {
       case SWIPE_LEFT:
         if (page !== pageNumber && !scrolling) {
           setPage(page + 1);
-          flatListRef!.scrollToOffset({ animated: true, offset: 0 });
+          flatListRef!.scrollToOffset({animated: true, offset: 0});
         }
         break;
       case SWIPE_RIGHT:
         if (page !== 0 && !scrolling) {
-          flatListRef!.scrollToOffset({ animated: true, offset: 0 });
+          flatListRef!.scrollToOffset({animated: true, offset: 0});
           setPage(page - 1);
         }
         break;
@@ -104,17 +118,23 @@ const CatalogueScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView forceInset={{ top: 'always' }} style={styles.safeArea}>
-      <Swiper onSwipe={(direction: string) => onSwipe(direction)} config={globals.swipeConfig} style={styles.swiper}>
-        <TopBarWithSearchBar searchAction={searchCans} clearSearch={clearSearch} />
+    <SafeAreaView style={styles.safeArea}>
+      <Swiper
+        onSwipe={(direction: string) => onSwipe(direction)}
+        config={globals.swipeConfig}
+        style={styles.swiper}>
+        <TopBarWithSearchBar
+          searchAction={searchCans}
+          clearSearch={clearSearch}
+        />
         <If
           condition={pageNumber !== 0}
           then={
-            <PageCounter>
-              <PageNumberLabel>
+            <View style={styles.pageCounterStyle}>
+              <Text style={styles.pageNumberLabelStyle}>
                 {t.PAGE} {page + 1} {t.OF} {pageNumber + 1}
-              </PageNumberLabel>
-            </PageCounter>
+              </Text>
+            </View>
           }
         />
         <If
@@ -129,22 +149,28 @@ const CatalogueScreen = ({ navigation }) => {
                 <If
                   condition={content.length === 0}
                   then={
-                    <EmptyListNotice adjustsFontSizeToFit numberOfLines={1}>
+                    <Text
+                      style={styles.emptyListNoticeStyle}
+                      adjustsFontSizeToFit
+                      numberOfLines={1}>
                       {t.EMPTY_LIST_NOTICE}
-                    </EmptyListNotice>
+                    </Text>
                   }
                 />
               }
               ref={ref => {
                 flatListRef = ref;
               }}
-              renderItem={({ item, index }) => (
+              renderItem={({item, index}: {item: ItemType; index: number}) => (
                 <CatalogueItem
                   link={item.link}
                   description={item.description}
                   title={item.title}
                   onPress={() => {
-                    navigation.navigate('Details', { _catalogue: content, _index: page * 10 + index });
+                    navigation.navigate('Details', {
+                      _catalogue: content,
+                      _index: page * 10 + index,
+                    });
                   }}
                 />
               )}
@@ -153,26 +179,24 @@ const CatalogueScreen = ({ navigation }) => {
           }
           else={<Spinner />}
         />
-        <ButtonFooter>
+        <View style={styles.buttonFooterStyle}>
           <CatalogueButton
             disabled={page === 0}
             onPress={() => {
               setPage(page - 1);
-              flatListRef!.scrollToOffset({ animated: true, offset: 0 });
-            }}
-          >
+              flatListRef!.scrollToOffset({animated: true, offset: 0});
+            }}>
             {t.PREV_BUTTON.toUpperCase()}
           </CatalogueButton>
           <CatalogueButton
             disabled={page === pageNumber}
             onPress={() => {
               setPage(page + 1);
-              flatListRef!.scrollToOffset({ animated: true, offset: 0 });
-            }}
-          >
+              flatListRef!.scrollToOffset({animated: true, offset: 0});
+            }}>
             {t.NEXT_BUTTON.toUpperCase()}
           </CatalogueButton>
-        </ButtonFooter>
+        </View>
       </Swiper>
     </SafeAreaView>
   );
@@ -182,46 +206,40 @@ const styles = StyleSheet.create({
   swiper: {
     flex: 1,
     backgroundColor: colors.black,
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
   },
   flatList: {
-    backgroundColor: colors.white
+    backgroundColor: colors.white,
   },
   safeArea: {
-    flex: 1
-  }
+    flex: 1,
+  },
+  pageCounterStyle: {
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    backgroundColor: colors.white,
+  },
+  pageNumberLabelStyle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: colors.baliHai,
+  },
+  buttonFooterStyle: {
+    width: globals.deviceWidth,
+    height: 70,
+    backgroundColor: colors.white,
+    justifyContent: 'center',
+    flexDirection: 'row',
+  },
+  emptyListNoticeStyle: {
+    color: colors.darkCharcoal,
+    textAlign: 'center',
+    fontSize: 19,
+    paddingHorizontal: 15,
+    paddingVertical: 15,
+  },
 });
-
-const PageCounter = styled.View`
-  width: 100%;
-  height: 30;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  background-color: ${colors.white};
-`;
-
-const PageNumberLabel = styled.Text`
-  font-size: 18;
-  font-weight: 600;
-  color: ${colors.baliHai};
-`;
-
-const ButtonFooter = styled.View`
-  width: ${globals.deviceWidth};
-  height: 70;
-  background-color: ${colors.white};
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-`;
-
-const EmptyListNotice = styled.Text`
-  color: ${colors.darkCharcoal};
-  text-align: center;
-  font-size: 19;
-  padding-horizontal: 15;
-  padding-vertical: 15;
-`;
 
 export default CatalogueScreen;

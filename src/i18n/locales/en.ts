@@ -1,4 +1,4 @@
-import { LanguageStringsObject } from '../i18n';
+import {LanguageStringsObject} from '../i18n';
 
 const en: LanguageStringsObject = {
   PREV_BUTTON: 'Prev',
@@ -9,7 +9,7 @@ const en: LanguageStringsObject = {
   PLEASE_CONNECT: 'Please check your connection and try again later',
   EMPTY_LIST_NOTICE: 'No items match your search',
   PAGE: 'Page',
-  OF: 'of'
+  OF: 'of',
 };
 
 export default en;

@@ -84,7 +84,7 @@ static const uint8_t kCodeToPlane[CODE_TO_PLANE_CODES] = {
 // to 256 (green component values) + 24 (length prefix values)
 // + color_cache_size (between 0 and 2048).
 // All values computed for 8-bit first level lookup with Mark Adler's tool:
-// http://www.hdfgroup.org/ftp/lib-external/zlib/zlib-1.2.5/examples/enough.c
+// https://github.com/madler/zlib/blob/v1.2.5/examples/enough.c
 #define FIXED_TABLE_SIZE (630 * 3 + 410)
 static const uint16_t kTableSize[12] = {
   FIXED_TABLE_SIZE + 654,
@@ -178,7 +178,7 @@ static WEBP_INLINE int PlaneCodeToDistance(int xsize, int plane_code) {
 
 //------------------------------------------------------------------------------
 // Decodes the next Huffman code from bit-stream.
-// FillBitWindow(br) needs to be called at minimum every second call
+// VP8LFillBitWindow(br) needs to be called at minimum every second call
 // to ReadSymbol, in order to pre-fetch enough bits.
 static WEBP_INLINE int ReadSymbol(const HuffmanCode* table,
                                   VP8LBitReader* const br) {
@@ -321,7 +321,7 @@ static int ReadHuffmanCode(int alphabet_size, VP8LDecoder* const dec,
     // The first code is either 1 bit or 8 bit code.
     int symbol = VP8LReadBits(br, (first_symbol_len_code == 0) ? 1 : 8);
     code_lengths[symbol] = 1;
-    // The second code (if present), is always 8 bit long.
+    // The second code (if present), is always 8 bits long.
     if (num_symbols == 2) {
       symbol = VP8LReadBits(br, 8);
       code_lengths[symbol] = 1;
@@ -559,8 +559,11 @@ static int AllocateAndInitRescaler(VP8LDecoder* const dec, VP8Io* const io) {
   memory += work_size * sizeof(*work);
   scaled_data = (uint32_t*)memory;
 
-  WebPRescalerInit(dec->rescaler, in_width, in_height, (uint8_t*)scaled_data,
-                   out_width, out_height, 0, num_channels, work);
+  if (!WebPRescalerInit(dec->rescaler, in_width, in_height,
+                        (uint8_t*)scaled_data, out_width, out_height,
+                        0, num_channels, work)) {
+    return 0;
+  }
   return 1;
 }
 #endif   // WEBP_REDUCE_SIZE
@@ -574,13 +577,14 @@ static int AllocateAndInitRescaler(VP8LDecoder* const dec, VP8Io* const io) {
 static int Export(WebPRescaler* const rescaler, WEBP_CSP_MODE colorspace,
                   int rgba_stride, uint8_t* const rgba) {
   uint32_t* const src = (uint32_t*)rescaler->dst;
+  uint8_t* dst = rgba;
   const int dst_width = rescaler->dst_width;
   int num_lines_out = 0;
   while (WebPRescalerHasPendingOutput(rescaler)) {
-    uint8_t* const dst = rgba + num_lines_out * rgba_stride;
     WebPRescalerExportRow(rescaler);
     WebPMultARGBRow(src, dst_width, 1);
     VP8LConvertFromBGRA(src, dst_width, colorspace, dst);
+    dst += rgba_stride;
     ++num_lines_out;
   }
   return num_lines_out;
@@ -594,8 +598,8 @@ static int EmitRescaledRowsRGBA(const VP8LDecoder* const dec,
   int num_lines_in = 0;
   int num_lines_out = 0;
   while (num_lines_in < mb_h) {
-    uint8_t* const row_in = in + num_lines_in * in_stride;
-    uint8_t* const row_out = out + num_lines_out * out_stride;
+    uint8_t* const row_in = in + (uint64_t)num_lines_in * in_stride;
+    uint8_t* const row_out = out + (uint64_t)num_lines_out * out_stride;
     const int lines_left = mb_h - num_lines_in;
     const int needed_lines = WebPRescaleNeededLines(dec->rescaler, lines_left);
     int lines_imported;
@@ -754,11 +758,11 @@ static WEBP_INLINE HTreeGroup* GetHtreeGroupForPos(VP8LMetadata* const hdr,
 
 typedef void (*ProcessRowsFunc)(VP8LDecoder* const dec, int row);
 
-static void ApplyInverseTransforms(VP8LDecoder* const dec, int num_rows,
+static void ApplyInverseTransforms(VP8LDecoder* const dec,
+                                   int start_row, int num_rows,
                                    const uint32_t* const rows) {
   int n = dec->next_transform_;
   const int cache_pixs = dec->width_ * num_rows;
-  const int start_row = dec->last_row_;
   const int end_row = start_row + num_rows;
   const uint32_t* rows_in = rows;
   uint32_t* const rows_out = dec->argb_cache_;
@@ -789,15 +793,15 @@ static void ProcessRows(VP8LDecoder* const dec, int row) {
     VP8Io* const io = dec->io_;
     uint8_t* rows_data = (uint8_t*)dec->argb_cache_;
     const int in_stride = io->width * sizeof(uint32_t);  // in unit of RGBA
-
-    ApplyInverseTransforms(dec, num_rows, rows);
+    ApplyInverseTransforms(dec, dec->last_row_, num_rows, rows);
     if (!SetCropWindow(io, dec->last_row_, row, &rows_data, in_stride)) {
       // Nothing to output (this time).
     } else {
       const WebPDecBuffer* const output = dec->output_;
       if (WebPIsRGBMode(output->colorspace)) {  // convert to RGBA
         const WebPRGBABuffer* const buf = &output->u.RGBA;
-        uint8_t* const rgba = buf->rgba + dec->last_out_row_ * buf->stride;
+        uint8_t* const rgba =
+            buf->rgba + (int64_t)dec->last_out_row_ * buf->stride;
         const int num_rows_out =
 #if !defined(WEBP_REDUCE_SIZE)
          io->use_scaling ?
@@ -948,7 +952,6 @@ static WEBP_INLINE void CopyBlock8b(uint8_t* const dst, int dist, int length) {
         break;
       default:
         goto Copy;
-        break;
     }
     CopySmallPattern8b(src, dst, length, pattern);
     return;
@@ -1193,6 +1196,7 @@ static int DecodeImageData(VP8LDecoder* const dec, uint32_t* const data,
       VP8LFillBitWindow(br);
       dist_code = GetCopyDistance(dist_symbol, br);
       dist = PlaneCodeToDistance(width, dist_code);
+
       if (VP8LIsEndOfStream(br)) break;
       if (src - data < (ptrdiff_t)dist || src_end - src < (ptrdiff_t)length) {
         goto Error;
@@ -1277,7 +1281,7 @@ static int ExpandColorMap(int num_colors, VP8LTransform* const transform) {
     uint8_t* const new_data = (uint8_t*)new_color_map;
     new_color_map[0] = transform->data_[0];
     for (i = 4; i < 4 * num_colors; ++i) {
-      // Equivalent to AddPixelEq(), on a byte-basis.
+      // Equivalent to VP8LAddPixels(), on a byte-basis.
       new_data[i] = (data[i] + new_data[i - 4]) & 0xff;
     }
     for (; i < 4 * final_num_colors; ++i) {
@@ -1515,7 +1519,7 @@ static int AllocateInternalBuffers32b(VP8LDecoder* const dec, int final_width) {
   assert(dec->width_ <= final_width);
   dec->pixels_ = (uint32_t*)WebPSafeMalloc(total_num_pixels, sizeof(uint32_t));
   if (dec->pixels_ == NULL) {
-    dec->argb_cache_ = NULL;    // for sanity check
+    dec->argb_cache_ = NULL;    // for soundness
     dec->status_ = VP8_STATUS_OUT_OF_MEMORY;
     return 0;
   }
@@ -1525,7 +1529,7 @@ static int AllocateInternalBuffers32b(VP8LDecoder* const dec, int final_width) {
 
 static int AllocateInternalBuffers8b(VP8LDecoder* const dec) {
   const uint64_t total_num_pixels = (uint64_t)dec->width_ * dec->height_;
-  dec->argb_cache_ = NULL;    // for sanity check
+  dec->argb_cache_ = NULL;    // for soundness
   dec->pixels_ = (uint32_t*)WebPSafeMalloc(total_num_pixels, sizeof(uint8_t));
   if (dec->pixels_ == NULL) {
     dec->status_ = VP8_STATUS_OUT_OF_MEMORY;
@@ -1553,7 +1557,7 @@ static void ExtractAlphaRows(VP8LDecoder* const dec, int last_row) {
     const int cache_pixs = width * num_rows_to_process;
     uint8_t* const dst = output + width * cur_row;
     const uint32_t* const src = dec->argb_cache_;
-    ApplyInverseTransforms(dec, num_rows_to_process, in);
+    ApplyInverseTransforms(dec, cur_row, num_rows_to_process, in);
     WebPExtractGreen(src, dst, cache_pixs);
     AlphaApplyFilter(alph_dec,
                      cur_row, cur_row + num_rows_to_process, dst, width);
@@ -1667,7 +1671,6 @@ int VP8LDecodeImage(VP8LDecoder* const dec) {
   VP8Io* io = NULL;
   WebPDecParams* params = NULL;
 
-  // Sanity checks.
   if (dec == NULL) return 0;
 
   assert(dec->hdr_.huffman_tables_ != NULL);

@@ -1,5 +1,5 @@
-import { Can, imageData } from '../constants/types';
-import { IImageInfo } from 'react-native-image-zoom-viewer/built/image-viewer.type';
+import {Can, imageData} from '../constants/types';
+import {IImageInfo} from 'react-native-image-zoom-viewer/built/image-viewer.type';
 import diacritics from '../constants/diacritics';
 
 /**
@@ -26,7 +26,7 @@ const extractDetails = (canData: imageData): Can => {
 const extractImages = (album: imageData[]): IImageInfo[] => {
   let images = [] as IImageInfo[];
   album.forEach(can => {
-    images.push({ url: can.link });
+    images.push({url: can.link});
   });
   return images;
 };
@@ -45,10 +45,7 @@ const accentFold = (s: string): string => {
 const clearDescription = (catalogue: imageData[]): imageData[] => {
   catalogue.forEach(can => {
     if (typeof can.description.split('Album:')[1] !== 'undefined') {
-      can.album = can.description
-        .split('Album:')[1]
-        .trim()
-        .replace(';', '');
+      can.album = can.description.split('Album:')[1].trim().replace(';', '');
     }
     can.description = can.description.split('Album:')[0];
   });
@@ -56,7 +53,15 @@ const clearDescription = (catalogue: imageData[]): imageData[] => {
 };
 
 const filterCans = (filter: string, data: imageData[]): imageData[] => {
-  return data.filter(can => accentFold(can.title.toLowerCase()).includes(filter.toLowerCase()));
+  return data.filter(can =>
+    accentFold(can.title.toLowerCase()).includes(filter.toLowerCase()),
+  );
 };
 
-export { filterCans, accentFold, clearDescription, extractDetails, extractImages };
+export {
+  filterCans,
+  accentFold,
+  clearDescription,
+  extractDetails,
+  extractImages,
+};

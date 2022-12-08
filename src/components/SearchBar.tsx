@@ -1,26 +1,45 @@
 import React from 'react';
-// @ts-ignore
-import styled from 'styled-components';
-import { GestureResponderEvent, ScrollView } from 'react-native';
+// eslint-disable-next-line prettier/prettier
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  TextInput,
+} from 'react-native';
 
 import BackIcon from './BackIcon';
 import IconView from './IconView';
 import If from '../utils/conditional';
-import { styles } from './IconStyles';
+import {styles as externalStyles} from './IconStyles';
 
-import { ICON_MARGIN, ICON_PADDING, MATERIAL_ICON_SIZE, TITLE_FONT_SIZE } from '../constants/dimensions';
+import {
+  ICON_MARGIN,
+  ICON_PADDING,
+  MATERIAL_ICON_SIZE,
+  TITLE_FONT_SIZE,
+} from '../constants/dimensions';
 import colors from '../constants/colors';
 import globals from '../constants/globals';
 
 /**
  * Functional component representing search bar.
  */
-const SearchBar = ({ placeholder, onChangeText, value, autoFocus, onBack, onClear, onEndEditing, onFocus, renderClear }) => (
-  <SearchBarContainer>
+const SearchBar = ({
+  placeholder,
+  onChangeText,
+  value,
+  autoFocus,
+  onBack,
+  onClear,
+  onEndEditing,
+  onFocus,
+  renderClear,
+}) => (
+  <View style={styles.searchBarContainerStyle}>
     <BackIcon onPress={onBack} />
-    <InputContainer>
+    <View style={styles.inputContainerStyle}>
       <ScrollView>
-        <SearchBarInput
+        <TextInput
           placeholder={placeholder}
           autoCorrect={false}
           autoComplete={'off'}
@@ -34,14 +53,15 @@ const SearchBar = ({ placeholder, onChangeText, value, autoFocus, onBack, onClea
           keyboardAppearance={'default'}
           underlineColorAndroid={'transparent'}
           textAlignVertical={'top'}
+          style={styles.searchBarInputStyle}
         />
       </ScrollView>
-    </InputContainer>
+    </View>
     <If
       condition={renderClear}
       then={
         <IconView
-          style={styles.clearFilterIcon}
+          style={externalStyles.clearFilterIcon}
           name={'clear'}
           size={MATERIAL_ICON_SIZE}
           color={colors.baliHai}
@@ -49,31 +69,33 @@ const SearchBar = ({ placeholder, onChangeText, value, autoFocus, onBack, onClea
         />
       }
     />
-  </SearchBarContainer>
+  </View>
 );
 
-const InputContainer = styled.View`
-  background-color: ${colors.black};
-  width: ${globals.deviceWidth - (MATERIAL_ICON_SIZE * 2 + 2 * ICON_PADDING + 2 * ICON_MARGIN)};
-  margin-horizontal: ${ICON_MARGIN};
-  height: ${MATERIAL_ICON_SIZE + 5};
-`;
-
-const SearchBarInput = styled.TextInput`
-  background-color: ${colors.black};
-  color: ${colors.white};
-  font-size: ${TITLE_FONT_SIZE};
-  padding-top: 0;
-  text-align: left;
-`;
-
-const SearchBarContainer = styled.View`
-  flex-direction: row;
-  padding-vertical: 15;
-  padding-horizontal: ${ICON_PADDING};
-  margin-bottom: 5;
-  background-color: ${colors.black};
-  width: ${globals.deviceWidth};
-`;
+const styles = StyleSheet.create({
+  inputContainerStyle: {
+    backgroundColor: colors.black,
+    width:
+      globals.deviceWidth -
+      (MATERIAL_ICON_SIZE * 2 + 2 * ICON_PADDING + 2 * ICON_MARGIN),
+    marginHorizontal: ICON_MARGIN,
+    height: MATERIAL_ICON_SIZE + 5,
+  },
+  searchBarInputStyle: {
+    backgroundColor: colors.black,
+    color: colors.white,
+    fontSize: TITLE_FONT_SIZE,
+    paddingTop: 0,
+    textAlign: 'left',
+  },
+  searchBarContainerStyle: {
+    flexDirection: 'row',
+    paddingVertical: 15,
+    paddingHorizontal: ICON_PADDING,
+    marginBottom: 5,
+    backgroundColor: colors.black,
+    width: globals.deviceWidth,
+  },
+});
 
 export default SearchBar;

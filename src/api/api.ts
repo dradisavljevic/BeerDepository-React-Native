@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { CLIENT_ID } from '../constants/authorization';
+import {CLIENT_ID} from '../constants/authorization';
 
 /**
  * Imgur API through axios library. BaseURL is that to Imgur album, while header should have
@@ -8,6 +8,6 @@ import { CLIENT_ID } from '../constants/authorization';
 export default axios.create({
   baseURL: 'https://api.imgur.com/3/album',
   headers: {
-    Authorization: `Client-ID ${CLIENT_ID}`
-  }
+    Authorization: `Client-ID ${CLIENT_ID}`,
+  },
 });

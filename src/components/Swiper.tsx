@@ -3,28 +3,27 @@
  * Tweaks in order to make a more applicable swiper component.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   PanResponder,
   View,
-  PanResponderInstance,
   GestureResponderEvent,
   PanResponderGestureState,
   ViewStyle,
-  StyleProp
+  StyleProp,
 } from 'react-native';
 
 export enum SwipeDirections {
   SWIPE_UP = 'SWIPE_UP',
   SWIPE_DOWN = 'SWIPE_DOWN',
   SWIPE_LEFT = 'SWIPE_LEFT',
-  SWIPE_RIGHT = 'SWIPE_RIGHT'
+  SWIPE_RIGHT = 'SWIPE_RIGHT',
 }
 
 export enum SwiperTypes {
   HORIZONTAL = 'HORIZONTAL',
   VERTICAL = 'VERTICAL',
-  COMBINED = 'COMBINED'
+  COMBINED = 'COMBINED',
 }
 
 type Configuration = {
@@ -38,12 +37,15 @@ const swipeConfig: Configuration = {
   velocityThreshold: 0.3,
   directionalOffsetThreshold: 80,
   gestureIsClickThreshold: 25,
-  swiperType: SwiperTypes.COMBINED
+  swiperType: SwiperTypes.COMBINED,
 };
 
 type Props = {
   config: Configuration;
-  onSwipe?: (direction: SwipeDirections, gestState: PanResponderGestureState) => any;
+  onSwipe?: (
+    direction: SwipeDirections,
+    gestState: PanResponderGestureState,
+  ) => any;
   onSwipeLeft?: (gestureState: PanResponderGestureState) => any;
   onSwipeRight?: (gestureState: PanResponderGestureState) => any;
   onSwipeUp?: (gestureState: PanResponderGestureState) => any;
@@ -61,7 +63,7 @@ const Swiper = props => {
       onStartShouldSetPanResponder: shouldSetResponder,
       onMoveShouldSetPanResponder: shouldSetResponder,
       onPanResponderRelease: responderEnd,
-      onPanResponderTerminate: responderEnd
+      onPanResponderTerminate: responderEnd,
     });
     setSwipeConfig(Object.assign(swipeConfig, props.config));
     setPanResponder(pr);
@@ -71,13 +73,21 @@ const Swiper = props => {
     initialize();
   }, []);
 
-  handlePanResponderEnd = (event: GestureResponderEvent, gestureState: PanResponderGestureState) => {
+  handlePanResponderEnd = (
+    event: GestureResponderEvent,
+    gestureState: PanResponderGestureState,
+  ) => {
     const swipeDirection = getSwipeDirection(gestureState);
     swipeDirection && triggerSwipeHandlers(swipeDirection, gestureState);
   };
 
-  handleShouldSetPanResponder = (event: GestureResponderEvent, gestureState: PanResponderGestureState) => {
-    return event.nativeEvent.touches.length === 1 && !gestureIsClick(gestureState);
+  handleShouldSetPanResponder = (
+    event: GestureResponderEvent,
+    gestureState: PanResponderGestureState,
+  ) => {
+    return (
+      event.nativeEvent.touches.length === 1 && !gestureIsClick(gestureState)
+    );
   };
 
   gestureIsClick = (gestureState: PanResponderGestureState) => {
@@ -93,8 +103,11 @@ const Swiper = props => {
     }
   };
 
-  triggerSwipeHandlers = (swipeDirection: SwipeDirections, gestureState: PanResponderGestureState) => {
-    const { SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN } = SwipeDirections;
+  triggerSwipeHandlers = (
+    swipeDirection: SwipeDirections,
+    gestureState: PanResponderGestureState,
+  ) => {
+    const {SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN} = SwipeDirections;
     props.onSwipe && props.onSwipe(swipeDirection, gestureState);
     switch (swipeDirection) {
       case SWIPE_LEFT:
@@ -113,10 +126,13 @@ const Swiper = props => {
   };
 
   getSwipeDirection = (gestureState: PanResponderGestureState) => {
-    const { SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN } = SwipeDirections;
-    const { dx, dy } = gestureState;
+    const {SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN} = SwipeDirections;
+    const {dx, dy} = gestureState;
 
-    if (swipeConfig.swiperType === SwiperTypes.COMBINED || swipeConfig.swiperType === SwiperTypes.HORIZONTAL) {
+    if (
+      swipeConfig.swiperType === SwiperTypes.COMBINED ||
+      swipeConfig.swiperType === SwiperTypes.HORIZONTAL
+    ) {
       if (Math.abs(dx) > Math.abs(dy)) {
         if (isValidHorizontalSwipe(gestureState)) {
           return dx > 0 ? SWIPE_RIGHT : SWIPE_LEFT;
@@ -135,20 +151,23 @@ const Swiper = props => {
     velocity: number,
     velocityThreshold: number,
     directionalOffset: number,
-    directionalOffsetThreshold: number
+    directionalOffsetThreshold: number,
   ) => {
-    return Math.abs(velocity) > velocityThreshold && Math.abs(directionalOffset) < directionalOffsetThreshold;
+    return (
+      Math.abs(velocity) > velocityThreshold &&
+      Math.abs(directionalOffset) < directionalOffsetThreshold
+    );
   };
 
   isValidHorizontalSwipe = (gestureState: PanResponderGestureState) => {
-    const { vx, dy } = gestureState;
-    const { velocityThreshold, directionalOffsetThreshold } = swipeConfig;
+    const {vx, dy} = gestureState;
+    const {velocityThreshold, directionalOffsetThreshold} = swipeConfig;
     return isValidSwipe(vx, velocityThreshold, dy, directionalOffsetThreshold);
   };
 
   isValidVerticalSwipe = (gestureState: PanResponderGestureState) => {
-    const { vy, dx } = gestureState;
-    const { velocityThreshold, directionalOffsetThreshold } = swipeConfig;
+    const {vy, dx} = gestureState;
+    const {velocityThreshold, directionalOffsetThreshold} = swipeConfig;
     return isValidSwipe(vy, velocityThreshold, dx, directionalOffsetThreshold);
   };
 
