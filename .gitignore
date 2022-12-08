@@ -43,7 +43,6 @@ yarn-error.log
 # BUCK
 buck-out/
 \.buckd/
-*.keystore
 
 # fastlane
 #
@@ -70,6 +69,3 @@ src/constants/authorization.ts
 # Ruby Gems (Bundler)
 /vendor
 /template/vendor
-
-# CocoaPods
-/ios/Pods/
